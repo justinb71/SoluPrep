@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/navbar'); %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</head>
+<body>
+<div class="flex justify centre">  
+    <div class="flex bordered" style="width: 360px; flex-direction: column;">
+        <h2 style="margin-bottom: 0px;">Create an account</h2>
+        <h5 style="margin: 0px">Start your free account</h5>
+        <% if (errorMessage) { %>
+            <p style="margin: 0;"><%= errorMessage %></p>
+          <% } %>
+
+        <form action="/register" method="POST">
+
+            <input type="text" placeholder="Enter your email" name="email">
+            <br>
+            <input type="text" placeholder="Enter your username" name="username">
+            <br>
+            
+            <div class="password-container">
+              <input type="password" name="password" autocomplete="new-password" required="" class="password-input" placeholder="Password">
+              <i class="far fa-eye toggle-icon" style="margin-left: -30px; cursor: pointer;"></i>
+            </div>
+          
+            <br>
+          
+            <div class="password-container">
+              <input type="password" name="confirmPassword" autocomplete="new-password" required="" class="password-input" placeholder="Confirm Password">
+              <i class="far fa-eye toggle-icon" style="margin-left: -30px; cursor: pointer;"></i>
+            </div>
+          
+            <br>
+          
+            <button class="secondary" style="width: 100%;" type="submit">Get Started</button>
+          </form>
+        <h6 style="margin:0">Already have an account? <a href="/login" style="color: var(--primary-700, #6941C6); font-weight: 600; font-size: 14px;">Log in</a></h6>
+        
+        
+        <script>
+            const toggleIcons = document.querySelectorAll('.toggle-icon');
+            const passwordInputs = document.querySelectorAll('.password-input');
+    
+            toggleIcons.forEach((toggleIcon, index) => {
+                toggleIcon.addEventListener('click', function () {
+                    const passwordInput = passwordInputs[index];
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+        </script>
+    </body>
+</html>

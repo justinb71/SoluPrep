@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('../partials/profileNavbar'); %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Add Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Add MDB JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+
+<!-- Add DataTables JS -->
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
+<!-- Your custom script -->
+<script>
+    // $(document).ready(function() {
+       
+    //     const table = $('#quizTable').DataTable({dom: 'Bfrtip', dom: 'Brtip'});
+    //     const customSearchInput = $('#customSearch');
+
+    //     // Apply the DataTables search functionality to the custom input
+    //     customSearchInput.on('keyup', function() {
+    //         table.search(this.value).draw();
+    //     });
+    // });
+</script>
+
+
+</head>
+<body>
+    
+    
+    
+   <div class="main">
+    <h2 style="width: 100%;border-bottom: 1px solid var(--gray-200, #EAECF0); margin: 0px !important; padding-bottom: 1rem;">Quiz Section</h2>
+    <div class="frame create-quiz" style="margin: 1rem; padding: 1rem; ">
+        <h1 style="margin-top: 0px;">Lets Create a quiz!</h1>
+        <h2>Press Create to Start</h2>
+        
+        <button class="create-quiz-button btns" onclick="window.location.href='/user/quizzes/create'">
+            Create
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 12 12 " fill="none">
+                <path d="M1 11L11 1M11 1H1M11 1V11" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+         </button>
+    </div>
+    
+    <table id="quizTable" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+
+            <tr>
+                <th>
+                    <h1>Quizzes</h1>
+                    <h2>These are your personal quizzes</h2>
+                </th>
+                
+                <th colspan="5" >
+                    
+                    <div class="search-frame">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M17.5 17.5L13.875 13.875M15.8333 9.16667C15.8333 12.8486 12.8486 15.8333 9.16667 15.8333C5.48477 15.8333 2.5 12.8486 2.5 9.16667C2.5 5.48477 5.48477 2.5 9.16667 2.5C12.8486 2.5 15.8333 5.48477 15.8333 9.16667Z" stroke="#667085" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        <input type="search" id="customSearch"  class="form-control search-bar" placeholder="Search quizzes...">
+                    </div>
+                </th>
+            </tr>
+            
+            <tr>
+                <th>Quiz Title</th>
+                <th>Subject</th>
+                <th>Topics</th>
+                <th>Date Created</th>
+                <th>Last Score</th>
+                
+            </tr>
+        </thead>
+        <tbody id="table_body">
+            <!-- <tr>
+                <td>Quiz 1</td>
+                <td>Mathematics</td>
+                <td>Geometry, Algebra</td>
+                <td>August 3rd, 2022</td>
+                <td>89%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 2</td>
+                <td>Physics</td>
+                <td>Mechanics</td>
+                <td>August 8th, 2022</td>
+                <td>78%</td>
+                
+            </tr>
+            <tr>
+                <td>Midterm</td>
+                <td>English</td>
+                <td>Grammar, Literature</td>
+                <td>September 15th, 2022</td>
+                <td>95%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 3</td>
+                <td>History</td>
+                <td>World War II</td>
+                <td>September 22nd, 2022</td>
+                <td>72%</td>
+                
+            </tr>
+            <tr>
+                <td>Project 1</td>
+                <td>Computer Science</td>
+                <td>Programming</td>
+                <td>October 5th, 2022</td>
+                <td>88%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 4</td>
+                <td>Biology</td>
+                <td>Cell Biology</td>
+                <td>October 12th, 2022</td>
+                <td>92%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 5</td>
+                <td>Chemistry</td>
+                <td>Periodic Table</td>
+                <td>November 2nd, 2022</td>
+                <td>81%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 6</td>
+                <td>Geography</td>
+                <td>Continents, Oceans</td>
+                <td>November 16th, 2022</td>
+                <td>87%</td>
+                
+            </tr>
+            <tr>
+                <td>Final Exam</td>
+                <td>Mathematics</td>
+                <td>Various Topics</td>
+                <td>December 10th, 2022</td>
+                <td>78%</td>
+                
+            </tr>
+            <tr>
+                <td>Project 2</td>
+                <td>Art</td>
+                <td>Painting</td>
+                <td>December 18th, 2022</td>
+                <td>94%</td>
+                
+            </tr>
+            
+            <tr>
+                <td>Quiz 7</td>
+                <td>Literature</td>
+                <td>Shakespearean Plays</td>
+                <td>January 8th, 2023</td>
+                <td>86%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 8</td>
+                <td>Physics</td>
+                <td>Optics</td>
+                <td>January 15th, 2023</td>
+                <td>79%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 9</td>
+                <td>Chemistry</td>
+                <td>Chemical Reactions</td>
+                <td>February 5th, 2023</td>
+                <td>83%</td>
+                
+            </tr>
+            <tr>
+                <td>Midterm</td>
+                <td>History</td>
+                <td>Ancient Civilizations</td>
+                <td>February 18th, 2023</td>
+                <td>91%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 10</td>
+                <td>Biology</td>
+                <td>Genetics</td>
+                <td>March 2nd, 2023</td>
+                <td>88%</td>
+                
+            </tr>
+            <tr>
+                <td>Project 3</td>
+                <td>Computer Science</td>
+                <td>Web Development</td>
+                <td>March 15th, 2023</td>
+                <td>95%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 11</td>
+                <td>Geography</td>
+                <td>Climate Zones</td>
+                <td>April 5th, 2023</td>
+                <td>77%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 12</td>
+                <td>Mathematics</td>
+                <td>Trigonometry</td>
+                <td>April 20th, 2023</td>
+                <td>82%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 13</td>
+                <td>Language</td>
+                <td>Vocabulary</td>
+                <td>May 3rd, 2023</td>
+                <td>94%</td>
+                
+            </tr>
+            <tr>
+                <td>Final Exam</td>
+                <td>Various Subjects</td>
+                <td>Comprehensive</td>
+                <td>June 1st, 2023</td>
+                <td>85%</td>
+                
+            </tr>
+            <tr>
+                <td>Project 4</td>
+                <td>Science</td>
+                <td>Experiment Report</td>
+                <td>June 10th, 2023</td>
+                <td>90%</td>
+                
+            </tr>
+            <tr>
+                <td>Quiz 14</td>
+                <td>Physical Education</td>
+                <td>Fitness Test</td>
+                <td>June 20th, 2023</td>
+                <td>96%</td>
+                
+            </tr>
+            <tr>
+                <td>Final Project</td>
+                <td>Art</td>
+                <td>Sculpture</td>
+                <td>June 30th, 2023</td>
+                <td>89%</td>
+                
+            </tr>
+             -->
+        </tbody>
+    </table>
+    
+   </div>
+</body>
+
+</html>
+
+<script>
+function createAndAppendTableRow(data, parentElementId) {
+    const tr = document.createElement('tr');
+
+    // Loop through the data array and create <td> elements for each item
+    data.forEach(item => {
+        const td = document.createElement('td');
+        td.textContent = item;
+        tr.appendChild(td);
+    });
+
+    // Append the <tr> element to the specified parent element
+    const parentElement = document.getElementById(parentElementId);
+    if (parentElement) {
+        parentElement.appendChild(tr);
+    } else {
+        console.error(`Parent element with ID ${parentElementId} not found.`);
+    }
+}
+
+async function fetchQuizzes() {
+  try {
+    const url = `/user/quiz/get-quizzes`
+    const options = {
+      method: "GET",
+      headers: {
+
+      },
+    };
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+    
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+
+  
+  
+}
+
+document.addEventListener("DOMContentLoaded", async function(){
+    try {
+        const quizzes = await fetchQuizzes();
+        const quizData = quizzes.quizzes;
+
+        quizData.forEach(quiz => {
+            console.log(quiz)
+            const rowData = [quiz["quiz_name"], "Mathematics", "Geometry, Algebra", quiz["creation_date"], "89%"];
+            createAndAppendTableRow(rowData, "table_body");
+        });
+
+        // Initialize DataTable after populating data
+        $('#quizTable').DataTable({ dom: 'Bfrtip', dom: 'Brtip' });
+    } catch (error) {
+        console.error("Error:", error);
+    }
+});
+
+
+</script>
+
+<style>
+
+
+
+</style>

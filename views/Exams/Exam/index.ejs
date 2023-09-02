@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<%- include('../../partials/profileNavbar'); %>
+</head>
+<body>
+    <div class="main">
+        <div class="quiz-quiz-header">
+            <h1 id="quizName">A Level Mathematics Revision</h1>
+            <h2>Topics:</h2>
+            <h3>Diffrentiation, Binomial Expansion</h3>
+        </div>
+
+
+        <div class="quiz-quiz-questions-frame">
+            
+            <!-- <div class="quiz-quiz-question-frame">
+                <h1>What is 1 + 1?</h1>
+                <h2>Select An Option</h2>
+                <span class="quiz-quiz-question-type-chip" style="background-color: #2E90FA;">Multiple Choice</span>
+                <div class="quiz-quiz-question-radio-container">
+                    <div class="quiz-quiz-question-radio-wrapper">
+                      <label class="quiz-quiz-question-radio-button">
+                        <input id="option1" name="radio-group" type="radio">
+                        <span class="quiz-quiz-question-radio-checkmark"></span>
+                        <span class="quiz-quiz-question-radio-label">A. 2</span>
+                      </label>
+                    </div>
+                  
+                    <div class="quiz-quiz-question-radio-wrapper">
+                      <label class="quiz-quiz-question-radio-button">
+                        <input id="option2" name="radio-group" type="radio">
+                        <span class="quiz-quiz-question-radio-checkmark"></span>
+                        <span class="quiz-quiz-question-radio-label">B. 24</span>
+                      </label>
+                    </div>
+                  
+                    <div class="quiz-quiz-question-radio-wrapper">
+                      <label class="quiz-quiz-question-radio-button">
+                        <input id="option3" name="radio-group" type="radio">
+                        <span class="quiz-quiz-question-radio-checkmark"></span>
+                        <span class="quiz-quiz-question-radio-label">C. 43</span>
+                      </label>
+                    </div>
+                    <div class="quiz-quiz-question-radio-wrapper">
+                        <label class="quiz-quiz-question-radio-button">
+                          <input id="option3" name="radio-group" type="radio">
+                          <span class="quiz-quiz-question-radio-checkmark"></span>
+                          <span class="quiz-quiz-question-radio-label">D. -2</span>
+                        </label>
+                      </div>
+                  </div>
+            </div>
+
+            <div class="quiz-quiz-question-frame">
+                <span class="quiz-quiz-question-type-chip" style="background-color: #EE46BC;">Short Answer</span>
+                <h1>What is 2 * 2?</h1>
+                <h2>Enter An Answer</h2>
+                <input type="text" placeholder="Answer..." style="width: calc(100% - 30px - 4rem); margin: 2rem;">
+
+            </div>
+
+            <div class="quiz-quiz-question-frame">
+                
+                <span class="quiz-quiz-question-type-chip" style="background-color: #F04438;">Long Answer</span>
+                <h1>Differentiate x^2 + 2x - 10 </h1>
+                <h2>Enter An Answer</h2>
+                <textarea placeholder="Answer..."></textarea>
+            </div> -->
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+<script>
+
+
+
+
+class createQuestion{
+
+    constructor(){
+        this.questionData = [];
+    }
+
+    generateUniqueId() {
+        let id;
+        do {
+            id = Math.random().toString(36).substr(2, 9); // Generate a random alphanumeric ID
+        } while (this.questionData.some(data => data[0] === id));
+        return id;
+    }
+    
+    createMultipleChoiceQuestion(questionText, options){
+        const questionId = this.generateUniqueId();
+        this.questionData.push([questionId, 'Multiple Choice']);;
+
+        const questionFrame = document.createElement('div');
+        questionFrame.classList.add('quiz-quiz-question-frame');
+        questionFrame.id = questionId;
+
+        const questionTitle = document.createElement('h1');
+        questionTitle.textContent = questionText;
+        questionFrame.appendChild(questionTitle);
+
+        const questionSubtitle = document.createElement('h2');
+        questionSubtitle.textContent = "Select An Answer";
+        questionFrame.appendChild(questionSubtitle);
+
+        const questionTypeChip = document.createElement('span');
+        questionTypeChip.classList.add('quiz-quiz-question-type-chip');
+        questionTypeChip.style.backgroundColor = '#2E90FA';
+        questionTypeChip.textContent = 'Multiple Choice';
+        questionFrame.appendChild(questionTypeChip);
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.classList.add('quiz-quiz-question-radio-container');
+        
+        options.forEach((optionText, index) => {
+            const optionWrapper = document.createElement('div');
+            optionWrapper.classList.add('quiz-quiz-question-radio-wrapper');
+
+            const label = document.createElement('label');
+            label.classList.add('quiz-quiz-question-radio-button');
+            label.htmlFor = `option${index + 1}`;
+
+            const input = document.createElement('input');
+            input.id = `option${index + 1}`;
+            input.name = 'radio-group';
+            input.type = 'radio';
+
+            const checkmark = document.createElement('span');
+            checkmark.classList.add('quiz-quiz-question-radio-checkmark');
+
+            const optionLabel = document.createElement('span');
+            optionLabel.classList.add('quiz-quiz-question-radio-label');
+            optionLabel.textContent = `${String.fromCharCode(65 + index)}. ${optionText}`;
+
+            label.appendChild(input);
+            label.appendChild(checkmark);
+            label.appendChild(optionLabel);
+            optionWrapper.appendChild(label);
+            optionsContainer.appendChild(optionWrapper);
+        });
+
+        questionFrame.appendChild(optionsContainer);
+        document.querySelector('.quiz-quiz-questions-frame').appendChild(questionFrame);
+        
+    };
+
+    createShortAnswerQuestion(questionText){
+        const questionId = this.generateUniqueId();
+        this.questionData.push([questionId, 'Short Answer']);
+
+        const questionFrame = document.createElement('div');
+        questionFrame.classList.add('quiz-quiz-question-frame');
+        questionFrame.id = questionId;
+        const questionTypeChip = document.createElement('span');
+        questionTypeChip.classList.add('quiz-quiz-question-type-chip');
+        questionTypeChip.style.backgroundColor = '#EE46BC';
+        questionTypeChip.textContent = 'Short Answer';
+        questionFrame.appendChild(questionTypeChip);
+
+        const questionTitle = document.createElement('h1');
+        questionTitle.textContent = questionText;
+        questionFrame.appendChild(questionTitle);
+
+        const answerInput = document.createElement('input');
+        answerInput.type = 'text';
+        answerInput.placeholder = 'Answer...';
+        answerInput.style.width = 'calc(100% - 30px - 4rem)';
+        answerInput.style.margin = '2rem';
+        answerInput.style.marginTop = '0';
+        questionFrame.appendChild(answerInput);
+
+        document.querySelector('.quiz-quiz-questions-frame').appendChild(questionFrame);
+        
+    };
+
+    createLongAnswerQuestion(questionText) {
+        const questionId = this.generateUniqueId();
+        this.questionData.push([questionId, 'Long Answer']);
+
+        const questionFrame = document.createElement('div');
+        questionFrame.classList.add('quiz-quiz-question-frame');
+        questionFrame.id = questionId;
+
+        const questionTypeChip = document.createElement('span');
+        questionTypeChip.classList.add('quiz-quiz-question-type-chip');
+        questionTypeChip.style.backgroundColor = '#F04438';
+        questionTypeChip.textContent = 'Long Answer';
+        questionFrame.appendChild(questionTypeChip);
+
+        const questionTitle = document.createElement('h1');
+        questionTitle.textContent = questionText;
+        questionFrame.appendChild(questionTitle);
+
+        const answerTextarea = document.createElement('textarea');
+        answerTextarea.placeholder = 'Answer...';
+        questionFrame.appendChild(answerTextarea);
+        answerTextarea.style.marginTop = '0';
+
+        document.querySelector('.quiz-quiz-questions-frame').appendChild(questionFrame);
+    }
+}
+
+
+async function fetchQuestions(quizID) {
+  try {
+    const url = `/user/quizzes/get-questions?quizID=${quizID}`;
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any other headers if needed
+      },
+    };
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    let instance = new createQuestion();
+
+    quizID = sessionStorage.getItem("quizID");
+    quizID = quizID.toString();
+
+    fetchQuestions(quizID)
+    .then(result=>{
+        questions = result.generatedQuestions;
+        quizName = result.quizName;
+        console.log(quizName)
+
+        document.querySelector("#quizName").textContent = quizName
+    
+   
+
+   Object.keys(questions).forEach(key => {
+       const question = questions[key]["question"];
+       if (question["TYPE"] == "Multiple Choice"){
+           text = question["QUESTION"]
+           options =  question["OPTIONS"]
+           instance.createMultipleChoiceQuestion(text,options);
+       } else if (question["TYPE"] == "Short Answer"){
+           instance.createShortAnswerQuestion(question["QUESTION"]);
+       } else if (question["TYPE"] == "Long Answer"){
+           instance.createLongAnswerQuestion(question["QUESTION"]);
+       }
+   });
+    })
+
+    
+
+    
+    
+
+
+});
+</script>
+
+
+<style>
+
+
+</style>

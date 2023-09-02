@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<%- include('../../partials/profileNavbar'); %>
+</head>
+<body>
+    
+    <div id="modelModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button" id="closeModel">&times;</span>
+          <div class="modelResult">
+            <h2>Choose a Name For Your Exam Paper</h2>
+            <form style="width: 100%; display: flex; flex-direction: column; gap: 1rem;" onsubmit="generateQuiz(event)" >
+                <input type="text" placeholder="Enter a name" style="width: calc(100% - 30px);" id="quizNameInput" required>
+                <button class="btns quiz-create-sidepanel-button" style="background: var(--purple-600, #7f56d9); width: 100%"type="submit">Create Quiz</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      
+      
+    
+    
+   <div class="main">
+
+    
+        <div class="quiz-create-main">
+            <h2>Questions</h2>
+
+            <div class="quiz-create-questions-table">
+                <div class="even quiz-create-questions-table-headings">
+                    <div class="quiz-create-questions-heading">No.</div>
+                    <div class="quiz-create-questions-heading">Subject</div>
+                    <div class="quiz-create-questions-heading">Topic</div>
+                    <div class="quiz-create-questions-heading">Type</div>
+                    <div class="quiz-create-questions-heading">Level</div>
+                    <div class="quiz-create-questions-heading">Difficulty</div>
+                </div>
+
+                <!-- <div class="odd quiz-create-question">
+                    <div class="quiz-create-questions-item">1</div>
+                    <div class="quiz-create-questions-item">Mathematics</div>
+                    <div class="quiz-create-questions-item">Binomial Expansion</div>
+                    <div class="quiz-create-questions-item">A Level</div>
+                    <div class="quiz-create-questions-item">Hard</div>
+                </div> -->
+
+            
+                
+            </div>
+            
+        </div>
+
+        <div class="quiz-create-sidepanel">
+            
+            <div class="quiz-create-sidepanel-item">
+                <h2>Add Question</h2>
+            </div>
+            <form style="width: 100%; display: flex; flex-direction: column; gap: 1rem;" onsubmit="createQuestion(event)">
+
+                <div class="quiz-create-sidepanel-item">
+                    <label>Select a Subject</label>
+
+                    <select class="subjectSelection" required>
+                        <option value="" disabled selected hidden>Select Subject</option>
+
+                    </select>
+                </div>
+
+                <div class="quiz-create-sidepanel-item">
+                    <label>Select a Topic</label>
+
+                    <select class="topicSelection" required>
+                        <option value="" disabled selected hidden>Select Topic</option>
+                        
+                    </select>
+                </div>
+
+                <div class="quiz-create-sidepanel-item">
+                    <label>Difficulty</label>
+                    <div class="radio-input">
+                        <label>
+                        <input type="radio" id="value-1" name="difficulty-level" value="Easy">
+                        <span>Easy</span>
+                        </label>
+                        <label>
+                        <input type="radio" id="value-2" name="difficulty-level" value="Moderate" checked>
+                        <span>Moderate</span>
+                        </label>
+                        <label>
+                        <input type="radio" id="value-3" name="difficulty-level" value="Hard">
+                        <span>Hard</span>
+                        </label>
+                        <span class="selection-three"></span>
+                    </div>
+
+                </div>
+                <div class="quiz-create-sidepanel-item">
+                    <label>Type</label>
+                    <div class="radio-input">
+                        <label>
+                        <input type="radio" id="value-1" name="type-radio" value="Short" checked>
+                        <span>Short</span>
+                        </label>
+                        <label>
+                        <input type="radio" id="value-2" name="type-radio" value="Long">
+                        <span>Long</span>
+                        </label>
+                        <label>
+                        <input type="radio" id="value-3" name="type-radio" value="Multiple Choice">
+                        <span>Multiple Choice</span>
+                        </label>
+                        <span class="selection-three"></span>
+                    </div>
+                </div>
+
+                <div class="quiz-create-sidepanel-item">
+                    <label>Level</label>
+                    <div class="radio-input two">
+                        <label>
+                        <input type="radio" id="value-1" name="level-radio" value="A Level" checked>
+                        <span>A Level</span>
+                        </label>
+                        <label>
+                        <input type="radio" id="value-2" name="level-radio" value="GCSE">
+                        <span>GCSE</span>
+                        </label>
+                        
+                        <span class="selection-two"></span>
+                    </div>
+                </div>
+
+                <div class="quiz-create-sidepanel-item" >
+                    <button class="btns quiz-create-sidepanel-button" style="background: var(--purple-600, #7f56d9);"type="submit">Add Question</button>
+                </div>
+
+                
+            </form>
+
+            <div class="quiz-create-sidepanel-item" style="position: absolute; bottom: 0px;">
+                <button class="btns quiz-create-sidepanel-button" onclick="confirmQuiz()" id="confirmQuizButton">Create Exam</button>
+            </div>
+        </div>
+
+   </div>
+   <div id="errorNotification" class="notification">
+        <div class="notification-content">
+            <span class="close-button2" id="closeError">&times;</span>
+            <div class="notification-result">
+                <div class="error-icon-frame">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <path d="M13.9999 9.33331V14M13.9999 18.6666H14.0116M25.6666 14C25.6666 20.4433 20.4432 25.6666 13.9999 25.6666C7.5566 25.6666 2.33325 20.4433 2.33325 14C2.33325 7.55666 7.5566 2.33331 13.9999 2.33331C20.4432 2.33331 25.6666 7.55666 25.6666 14Z" stroke="#D92D20" stroke-width="2.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg></div>
+                <p id="errorMessage">Please Add Questions!</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+<script>
+    
+
+
+    let numberOfQuestions = 1;
+    let questions = {}
+    
+async function getSubjects() {
+  const url = `/user/getSubjects`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+
+async function getTopics(subject) {
+  const url = `/user/getTopics?subject=${encodeURIComponent(subject)}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Request failed with status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
+}
+
+
+async function populateTopics(subject) {
+    try {
+        let topics = await getTopics(subject);
+        topics= topics.sort()
+        const topicSelect = document.querySelector(".topicSelection");
+
+        // Clear previous options
+        topicSelect.innerHTML = "";
+
+        // Create and append topic options
+        for (const topic of topics) {
+            let option = document.createElement("option");
+            option.value = topic;
+            option.innerHTML = topic;
+            topicSelect.appendChild(option);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const subjectSelect = document.querySelector(".subjectSelection");
+    const topicSelect = document.querySelector(".topicSelection");
+
+    // Initial population of subjects
+    getSubjects()
+        .then(result => {
+            for (const subject of result) {
+                let option = document.createElement("option");
+                option.value = subject;
+                option.innerHTML = subject;
+                subjectSelect.appendChild(option);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    // Event listener for subject selection change
+    subjectSelect.addEventListener("change", function() {
+        const selectedSubject = subjectSelect.value;
+        populateTopics(selectedSubject);
+    });
+});
+
+function createQuestion(event) {
+  event.preventDefault();
+
+  
+
+  const questionsTable = document.querySelector(".quiz-create-questions-table");
+
+  const subject = document.querySelector(".subjectSelection").value;
+  const topic = document.querySelector(".topicSelection").value;
+  const difficulty = document.querySelector('input[name="difficulty-level"]:checked').value;
+  const level = document.querySelector('input[name="level-radio"]:checked').value;
+  const type = document.querySelector('input[name="type-radio"]:checked').value;
+
+  const question = {
+    "subject": subject,
+    "topic": topic,
+    "type": type,
+    "difficulty": difficulty,
+    "level": level
+  }
+  questions[numberOfQuestions] = question
+  const questionDiv = document.createElement("div");
+  if (numberOfQuestions % 2 === 0){
+    questionDiv.className = "even quiz-create-question";
+  }else{
+    questionDiv.className = "odd quiz-create-question";
+  }
+
+
+  const numberDiv = createQuestionItemElement(numberOfQuestions);
+  const subjectDiv = createQuestionItemElement(subject);
+  const topicDiv = createQuestionItemElement(topic);
+  const difficultyDiv = createQuestionItemElement(difficulty);
+  const typeDiv = createQuestionItemElement(type);
+  const levelDiv = createQuestionItemElement(level);
+
+  questionDiv.appendChild(numberDiv);
+  questionDiv.appendChild(subjectDiv);
+  questionDiv.appendChild(topicDiv);
+  questionDiv.appendChild(typeDiv);
+  questionDiv.appendChild(difficultyDiv);
+  questionDiv.appendChild(levelDiv);
+
+  questionsTable.appendChild(questionDiv);
+  numberOfQuestions ++;
+}
+
+function createQuestionItemElement(content) {
+  const itemDiv = document.createElement("div");
+  itemDiv.className = "quiz-create-questions-item";
+  itemDiv.textContent = content;
+  return itemDiv;
+}
+
+
+function confirmQuiz(){
+    
+    if (Object.keys(questions).length === 0){
+        errorNotification.style.display = 'block';
+        
+    }else{
+        modelModal.style.display = 'flex';
+        errorNotification.style.display = 'none';
+    }
+}
+
+
+const modelModal = document.getElementById('modelModal');
+const closeModelButton = document.getElementById('closeModel');
+
+
+closeModelButton.addEventListener('click', () => {
+  modelModal.style.display = 'none';
+});
+
+modelModal.addEventListener('click', (event) => {
+  if (event.target === modelModal) {
+    modelModal.style.display = 'none';
+  }
+});
+
+const errorNotification = document.getElementById('errorNotification');
+const closeErrorButton = document.getElementById('closeError');
+
+closeErrorButton.addEventListener('click', () => {
+errorNotification.style.display = 'none';
+});
+
+errorNotification.addEventListener('click', (event) => {
+if (event.target === errorNotification) {
+    errorNotification.style.display = 'none';
+}
+});
+
+
+function generateQuiz(event){
+    event.preventDefault();
+
+    const quizName = document.querySelector("#quizNameInput").value;
+
+    fetch('/user/generateQuiz', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ "questions": questions, quizName:quizName})
+  })
+    .then(async response => {
+      if (response.ok) {
+        const responseBody = await response.json().then(res =>{
+          sessionStorage.setItem("quizID", res.quizID);
+          window.location.href="/user/quizzes/quiz"
+        })
+
+      } else {
+        console.error('Error:', response.statusText);
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+    });
+
+
+
+}
+
+
+
+
+
+</script>
+
+
+<style>
+    .radio-input input {
+  display: none;
+}
+
+.radio-input {
+  --container_width: 300px;
+  height: fit-content;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #000000;
+  width: var(--container_width);
+  overflow: hidden;
+  border: 1px solid rgba(53, 52, 52, 0.226);
+}
+
+.radio-input label {
+    all: unset;
+    text-align: center;
+    color: var(--gray-500, #667085);
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 18px;
+    width: 100%;
+    padding: 10px;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    font-weight: 600;
+    letter-spacing: -1px;
+    font-size: 14px;
+    font-weight: 500;
+  
+}
+
+.selection-three {
+    
+  display: none;
+  position: absolute;
+  height: 100%;
+  width: calc(var(--container_width) / 3);
+  z-index: 0;
+  left: 0;
+  top: 0;
+  transition: .15s ease;
+}
+
+.selection-two {
+    
+  display: none;
+  position: absolute;
+  height: 100%;
+  width: calc(var(--container_width) / 2);
+  z-index: 0;
+  left: 0;
+  top: 0;
+  transition: .15s ease;
+}
+
+.radio-input label:has(input:checked) {
+  color: #fff;
+}
+
+.radio-input label:has(input:checked) ~ .selection-three, .selection-two {
+  background-color: #7f56d9;
+  display: inline-block;
+}
+
+.radio-input label:nth-child(1):has(input:checked) ~ .selection-three {
+  transform: translateX(calc(var(--container_width) * 0/3));
+}
+
+.radio-input label:nth-child(2):has(input:checked) ~ .selection-three {
+  transform: translateX(calc(var(--container_width) * 1/3));
+}
+
+.radio-input label:nth-child(3):has(input:checked) ~ .selection-three {
+  transform: translateX(calc(var(--container_width) * 2/3));
+}
+
+.two label:nth-child(1):has(input:checked) ~ .selection-two {
+  transform: translateX(calc(var(--container_width) * 0/2));
+}
+
+.two label:nth-child(2):has(input:checked) ~ .selection-two {
+  transform: translateX(calc(var(--container_width) * 1/2));
+}
+
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+    width: 500px;
+    background-color: white;
+    margin: auto;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.close-button {
+  position: relative;
+  top: -20px;
+  right: -500px;
+  font-size: 24px;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.modelResult {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-direction: column;
+}
+
+
+.notification {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  right: 30px;
+  top: 30px;
+  width: 300px;
+  padding: 10px;
+  background-color: #d92c20;
+  color: white;
+  text-align: start;
+  border-radius: 5px;
+
+}
+
+.close-button2 {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#errorMessage {
+  margin: 10px 0;
+
+  color: white;
+/* Display sm/Medium */
+font-family: Inter;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 38px; /* 126.667% */
+}
+
+.notification-result {
+
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-direction: row;
+}
+
+.error-icon-frame{
+    display: flex;
+
+    padding: 14px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 100%;
+    background: var(--error-100, #FEE4E2);
+}
+
+</style>

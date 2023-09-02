@@ -1,0 +1,450 @@
+
+
+html{overflow-x: hidden;}
+
+  header{
+    width: 100%;
+    height: 60px;
+    box-shadow: 0px 2.5px 5px 0px rgba(0,0,0,0.1);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 4;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .title{
+    font-family: "Montserrat";
+    font-weight: 1000;
+    
+    position: absolute;
+    top:-10px;
+    right:20px
+
+  }
+
+  input[type = "checkbox"] {
+    --webkit-appearance: none;
+    display: none;
+    visibility: hidden;
+  }
+  
+  .bar {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    width: 30px;
+    height: 20px;
+
+    top: calc(50% - 10px);
+    margin-left: 10px;
+  }
+  
+  .bar span {
+    position: absolute;
+    width: 30px;
+    height: 5px;
+    background: #535353;
+    border-radius: 100px;
+    display: inline-block;
+    transition: 0.3s ease;
+    left: 0px;
+  }
+  
+  .bar span.top {
+    top: 0;
+  }
+  
+  .bar span.middle {
+    top: 10px;
+  }
+  
+  .bar span.bottom {
+    top:20px;
+  }
+  
+  input[type]:checked ~ span.top {
+    transform: rotate(45deg);
+    transform-origin: top left;
+    width: 30px;
+    left: 4px;
+  }
+  
+  input[type]:checked ~ span.bottom {
+    transform: rotate(-45deg);
+    transform-origin: top left;
+    width: 30px;
+    bottom: -1px;
+    box-shadow: 0 0 10px #495057;
+  }
+  
+  input[type]:checked ~ span.middle {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+
+
+.notification{
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    bottom:50px;
+    left:50px;
+    height: 50px;
+    width: max-content;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    box-shadow: 0px 0px 24px 10px rgba(0,0,0,0.1);
+    transform: translateY(30px);
+    opacity: 0;
+    visibility: hidden;
+    animation: fade-in 4s linear forwards;
+    z-index: 5;
+}
+
+.notification-progress{
+    position: absolute;
+    bottom: 5px;
+    left:5px;
+    width:calc(100% - 10px);
+    height:3px;
+    transform: scaleX(0);
+    transform-origin: left;
+    background-image: linear-gradient(
+        to right, #539bdb, #3250bf);
+    border-radius: inherit;
+    animation: load 3s 0.25s linear forwards;
+}
+
+#currentLocation{
+  animation: locationGlow 3s 0.25s ease-in-out forwards;
+  animation-iteration-count: infinite;
+}
+#currentLocation::before{
+  content: "|";
+  font-size: 36px;
+  position: absolute;
+  top:-6px;
+  left:-2px;
+}
+
+#currentLocation::after{
+  content: "|";
+  font-size: 36px;
+  position: absolute;
+  top:-6px;
+  right:-2px;
+  color: #000000;
+}
+
+@keyframes fade-in {
+    5%{
+        opacity:1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    90%{
+        opacity: 1;
+        transform: translateY(0); 
+    }
+    
+}
+@keyframes load {
+    to {
+        transform: scaleX(1);
+    }
+    
+}
+
+@keyframes locationGlow {
+  0%{
+    background-color: #93C6E7
+  }
+
+  50%{
+    background-color: #AEE2FF
+  }
+
+  100%{
+    background-color: #93C6E7
+  }
+  
+}
+  .sidePanel{
+    width: 300px;
+    height: calc(100% - 60px);
+    background-color: rgb(255, 255, 255);
+    box-shadow: 5px 0px 5px 0px rgba(0,0,0,0.1);
+    position: absolute;
+    left: 0px;
+    padding-top: 50px;
+    top:60px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sidePanel button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 12px;
+    gap: 8px;
+    height: 36px;
+    width: 100%;
+    border: none;
+    background: #b1b1b133;
+    cursor: pointer;
+    margin-bottom: 10px;
+    filter: brightness(1);
+    transition: .2s;
+  }
+
+  .sidePanel button:hover{
+    filter: brightness(.8);
+  } 
+
+  .sidePanel button:active{
+    filter: brightness(1);
+  }
+
+  .sidePanelButtonText{
+    line-height: 20px;
+    font-size: 17px;
+    color: #000000;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .sidePanelDashboardButton > svg{
+    width: 30px
+  } 
+  .sidePanelAIQuizGeneratorButton > svg{
+    width: 30px;
+    margin-top: 8px;
+  }
+
+
+  .settings_button {
+    display: flex;
+  padding: 8px 12px;
+  align-items: center;
+  gap: 105px;
+  align-self: stretch;
+  border-radius: 6px;
+  background: var(--primary-50, #F9F5FF);
+  }
+  
+  .authenticated_navbar_bottom_contents{
+    width: 100%;
+    background-color: #000000;
+  }
+  .lable {
+    line-height: 20px;
+    font-size: 17px;
+    color: #5D41DE;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+  }
+  
+  .settings_button:hover {
+    background: #5e41de4d;
+  }
+  
+  .settings_button:hover .settings_icon {
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+
+  
+
+  main{
+    width: calc(100% - 300px);
+    height: calc(100% - 60px);
+    background-color: rgb(247, 247, 247);
+    position: absolute;
+    left: 300px;
+    top:60px;
+    z-index: 2;
+    padding-left: 10px;
+}
+.location{
+    font-family: "Montserrat";
+    font-weight: 1000;
+    text-align: left;
+    font-size: 25px;
+    margin-bottom: 0px;
+}
+
+.greeting{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight:500;
+    color: rgb(77, 77, 77);
+    text-align: left;
+    font-size: 15px;
+    margin-top: 0px;
+}
+
+
+.contentBox{
+    border-radius: 5px;
+    box-shadow: 0px 0px 21px 5px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+.progressTitle{
+    font-family: "Montserrat";
+    font-weight: 1000;
+    text-align: center;
+    font-size: 38px;
+    color: rgb(0, 0, 0);
+    position: relative;
+    top:10px;
+    margin-top: 4px;
+    margin-bottom: 0px;
+}
+
+.horizontal-separator{
+    width: 75%;
+    position: relative;
+    left: 15%;
+    height: 1px;
+    border: solid rgb(150, 150, 150) 1px;
+    border-radius: 10px;
+
+}
+.verticle-separator{
+    width: 1px;
+    position: relative;
+
+    height: 20px;
+    margin-top: 10px;
+
+    border: solid rgb(148, 148, 148) 1px;
+    border-radius: 10px;
+
+}
+
+.recentTaskSidebar{
+    width:210px;
+    height: 400px;
+    border-radius: 5px;
+    margin-top: 30px;
+    margin-left: 10px;
+    padding: 10px 10px 10px 10px;
+    box-shadow: 0px 0px 21px 5px rgba(0,0,0,0.1);
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    
+}
+.contentBoxSubtitles{
+  font-family: "Montserrat";
+    font-weight: 1000;
+    text-align: center;
+    font-size: 30px;
+    color: rgb(0, 0, 0);
+    position: relative;
+    top:10px;
+    margin-top: 30px;
+    margin-bottom: 0px;
+}
+.progressboxSubjectsTitle{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight:500;
+    font-size: 23px;
+    color: rgb(0, 0, 0);
+    margin-top: 1px;
+}
+
+.progressSubjectButton{
+    border-radius: 5px;
+    width: 75%;
+    margin-bottom: 10px;
+    border: transparent;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    box-shadow: 0px 0px 14px 5px rgba(0,0,0,0.1);
+    background-color: white; 
+    transition: .2s;
+    filter: brightness(1);
+    text-overflow: ellipsis;
+}
+
+.progressSubjectButton:hover{
+    
+    filter: brightness(0.9);
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.1);
+}
+
+.progressSubjectButton:active{
+    
+    filter: brightness(1);
+    box-shadow: 0px 0px 14px 5px rgba(0,0,0,0.1);
+}
+::-webkit-scrollbar {
+    width: 5px;
+    
+  }
+
+  
+::-webkit-scrollbar-track {
+    
+    background-color: rgb(255, 255, 255);
+  }
+  
+::-webkit-scrollbar-thumb {
+    
+    background-color: rgb(192, 192, 192);
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    transition: 1s;
+    background-color: rgb(180, 180, 180);;
+    border-radius: 100px;
+  }
+
+  ::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+    margin-top: 20px;
+
+}
+main::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+  margin-top: 40px;
+
+}
+
+.recentTaskPanel{
+    width:760px;
+    height: 400px;
+    border-radius: 5px;
+    margin-top: 20px;
+    position: relative;
+    top:-420px;
+    left:230px;
+    padding: 10px 10px 10px 10px;
+    box-shadow: 0px 0px 21px 5px rgba(0,0,0,0.1);
+   
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

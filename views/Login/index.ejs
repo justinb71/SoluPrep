@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/navbar'); %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</head>
+<body>
+<div class="flex justify centre">  
+    <div class="flex bordered" style="width: 360px; flex-direction: column;">
+        <h2 style="margin-bottom: 0px;">Log in</h2>
+        <h5 style="margin: 0px">Welcome back! Please enter your details.</h5>
+        <% if (errorMessage) { %>
+            <p style="margin: 0;"><%= errorMessage %></p>
+          <% } %>
+
+         <form action="/login" method="POST">
+            <input type="text" placeholder="Enter your email" name="email" id="email" autocomplete="email">
+            <br>
+            <div class="password-container">
+                <input type="password" name="password" autocomplete="password" required="" class="password-input" placeholder="Password" id="password">
+                <i class="far fa-eye toggle-icon" style="margin-left: -30px; cursor: pointer;"></i>
+            </div>
+            
+
+            <div style="width: 100%;" class="flex">
+                <div class="flex" style="gap:0.5rem;">
+                    <input type="checkbox" name="remember"> <!-- Add name attribute to the checkbox -->
+                    <p>Remember for 30 days</p>
+                </div>
+                <div class="flex">
+                    <a href="/register" style="color: var(--primary-700, #6941C6); font-weight: 600; font-size: 14px;">Forgot Password</a></h6>
+                </div>
+            </div>
+            
+            <button class="secondary" style="width: 100%;">Sign in</button>
+        </form>
+        <h6 style="margin:0">Don't have an account? <a href="/register" style="color: var(--primary-700, #6941C6); font-weight: 600; font-size: 14px;">Sign Up</a></h6>
+        
+        
+        <script>
+            const toggleIcons = document.querySelectorAll('.toggle-icon');
+            const passwordInputs = document.querySelectorAll('.password-input');
+    
+            toggleIcons.forEach((toggleIcon, index) => {
+                toggleIcon.addEventListener('click', function () {
+                    const passwordInput = passwordInputs[index];
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+        </script>
+    </body>
+</html>

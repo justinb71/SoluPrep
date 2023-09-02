@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Inter'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoluPrep AI</title>
+    <link rel="icon" type="image/x-icon" href="/images/Logomark.ico">
+</head>
+<body>
+    <nav class="navbar seperate floating">
+        <div class="flex">
+        <div class="logo">
+            <a class="logo" href="/">
+            <svg xmlns="http://www.w3.org/2000/svg" width="29" height="48" viewBox="0 0 29 48" fill="none">
+                <rect y="19.2" width="9.59998" height="9.59999" fill="#B692F6"/>
+                <rect x="28.8" y="28.8" width="9.6" height="9.59999" transform="rotate(180 28.8 28.8)" fill="#B692F6"/>
+                <path d="M9.59998 19.2L19.2 9.59998V19.2L9.59998 28.7999V19.2Z" fill="#E9D7FE"/>
+                <path d="M19.2 28.8L9.59997 38.4L9.59997 28.8L19.2 19.2L19.2 28.8Z" fill="#D6BBFB"/>
+                <path d="M0 19.2L19.2 0V9.59999L9.59998 19.2H0Z" fill="#B692F6"/>
+                <path d="M28.7999 28.8L9.59995 48L9.59995 38.4L19.1999 28.8L28.7999 28.8Z" fill="#B692F6"/>
+              </svg>
+            SoluPrep AI
+        </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+        </ul>
+    </div>
+        <div class="flex nav-buttons">
+            <a href="/login">Login</a>
+            <button class="secondary" onclick="window.location.href='/register'">Sign Up</button>
+        </div>
+
+        <button class="nav-menu-button" style="background-color: transparent;" onclick="menuToggle()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M3 12H21M3 6H21M3 18H21" stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+        <div class="nav-menu">
+           
+            <ul class="nav-menu-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            
+                <button class="secondary" style="width: calc(100% - 20px)" onclick="window.location.href='/register'">Sign Up</button>
+                <button class="secondary" style="width: calc(100% - 20px); background-color: #F9F5FF; color: #6941C6; border: none;" onclick="window.location.href='/login'">Login</button>
+            
+        </div>
+
+    </nav>
+</body>
+</html>
+
+
+<script>
+    let menuOpen = false;
+
+    function menuToggle(){
+        const menuButton = document.querySelector(".nav-menu-button");
+        const menu = document.querySelector(".nav-menu");
+        if (menuOpen){
+            menuButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> <path d="M3 12H21M3 6H21M3 18H21" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>'
+            menu.style.visibility = "hidden"
+            window.scrollTo(0, 0);
+            document.body.style.overflow = 'scroll';
+            menuOpen = false;
+        }else{
+            menuButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> <path d="M18 6L6 18M6 6L18 18" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>'
+            menu.style.visibility = "visible"
+            window.scrollTo(document.END)
+            document.body.style.overflow = 'hidden';
+            menuOpen = true;
+        }
+
+    }
+</script>
