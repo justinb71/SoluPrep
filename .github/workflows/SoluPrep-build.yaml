@@ -42,7 +42,7 @@ jobs:
           npm ci
           
 
-      - name: Run script
+      # - name: Run script
 # uncomment the following lines if you want to add environment variables for this step
 #        env:
 #          MY_ENV_VAR: value-for-my-env-var
