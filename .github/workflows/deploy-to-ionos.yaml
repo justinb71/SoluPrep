@@ -17,10 +17,10 @@ on:
         required: true
         type: string
       deployment-ids:
-        require: true
+        required: true
         type: string
   push:
-    path:
+    paths:
       - ./.github/workflows/deploy-to-ionos.yaml
 
 concurrency: ${{ github.ref }}
@@ -97,6 +97,11 @@ jobs:
           deployment-info: ${{ steps.deployment.outputs.info }}
           ssh-user: ${{ secrets[env.SSH_USERNAME_SECRET] }}
           ssh-key: ${{ secrets.IONOS_SSH_KEY }}
+
+      - name: Start Server
+        run: |
+          cd /path/to/your/project
+          node server.js
 
       - name: Update deployment status
         if: ${{ always() }}
