@@ -100,7 +100,6 @@ jobs:
 
       - name: Start Server
         run: |
-          cd /path/to/your/project
           node server.js
 
       - name: Update deployment status
