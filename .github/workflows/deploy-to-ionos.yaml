@@ -100,7 +100,7 @@ jobs:
 
       - name: Start Server
         run: |
-          node app.js
+          npm run start
 
       - name: Update deployment status
         if: ${{ always() }}
