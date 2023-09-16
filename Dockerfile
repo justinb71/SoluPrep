@@ -12,8 +12,9 @@ COPY package*.json ./
 # Install the application dependencies
 RUN npm install
 
-EXPOSE 8080
+EXPOSE 3000
 
 # Define the entry point for the container
-CMD ["npm", "start"]
+CMD ["node", "app.js"]
+
 
