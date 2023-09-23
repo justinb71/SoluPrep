@@ -1,18 +1,21 @@
 const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const app = express();
+const session = require('express-session');
+const flash = require('express-flash');
 const path = require('path');
-const session = require('express-session'); // Import express-session
-const flash = require('express-flash'); 
-const User = require('./models/user.js'); // Adjust the path based on your project structure
+const User = require('./models/user');
 require('dotenv').config();
 
-app.use(express.static(path.join(__dirname, 'public')));
+const app = express();
+const port = 3000;
 
+// Middleware
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public', 'css')));
+app.use(express.static(path.join(__dirname, 'public', 'js')));
 app.set('view engine', 'ejs');
-app.use(express.static('css'));
-app.use(express.static('js'));
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -22,17 +25,13 @@ app.use(session({
     maxAge: 30 * 24 * 60 * 60 * 1000,
   }
 }));
-
 app.use(flash());
-
-require('dotenv').config();
-
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser((user, done) => {
-  done(null, user.user_id); // Store user ID in session
+  done(null, user.user_id);
 });
 
 passport.deserializeUser(async (id, done) => {
@@ -43,6 +42,7 @@ passport.deserializeUser(async (id, done) => {
     done(error);
   }
 });
+
 passport.use(new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password'
@@ -50,13 +50,7 @@ passport.use(new LocalStrategy({
   try {
     const user = await User.findByEmail(email);
 
-    if (!user) {
-      return done(null, false, { message: 'Incorrect email or password.' });
-    }
-
-    const isPasswordValid = await User.verifyPassword(user, password); // Corrected line
-
-    if (!isPasswordValid) {
+    if (!user || !(await User.verifyPassword(user, password))) {
       return done(null, false, { message: 'Incorrect email or password.' });
     }
 
@@ -66,12 +60,20 @@ passport.use(new LocalStrategy({
   }
 }));
 
+// Routes
+app.get('/', (req, res) => {
+  res.render('LandingPage');
+});
 
-// Set up other passport and JWT configurations
+app.get('/pricing', (req, res) => {
+  res.render('Pricing');
+});
 
-// Include your login and authentication routes
+app.get('/about', (req, res) => {
+  res.render('About');
+});
+
 const loginRoutes = require('./routes/login');
-// const authRoutes = require('./routes/auth');
 const registerRoutes = require('./routes/register');
 const protectedRoutes = require('./routes/protected');
 
@@ -79,20 +81,7 @@ app.use(loginRoutes);
 app.use(registerRoutes);
 app.use(protectedRoutes);
 
-
-app.get('/', (req, res) => {
-  res.render('\LandingPage');
-});
-app.get('/pricing', (req, res) => {
-  res.render('\Pricing');
-});
-
-app.get('/about', (req, res) => {
-  res.render('\About');
-});
-// ... other routes and configurations ...
-
 // Start the server
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

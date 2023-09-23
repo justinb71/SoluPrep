@@ -15,7 +15,7 @@ function checkNotAuthenticated(req, res, next){
 
 // Route to render the login page
 router.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render('login', {
+  res.render('Login', {
     errorMessage: req.flash('error')
   });
 });
@@ -23,9 +23,9 @@ router.get('/login', checkNotAuthenticated, (req, res) => {
 
 
 // Route to handle login form submission
-router.post('/login',passport.authenticate('local', {
-  successRedirect: '/dashboard',
-  failureRedirect: '/login',
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/Dashboard',
+  failureRedirect: '/Login',
   failureFlash: true
 }));
 

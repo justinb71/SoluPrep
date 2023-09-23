@@ -8,6 +8,8 @@ WORKDIR /app
 COPY . /app
 
 COPY package*.json ./
+COPY views /app/views
+COPY public /app/public
 
 # Install the application dependencies
 RUN npm install
