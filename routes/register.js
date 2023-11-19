@@ -20,7 +20,8 @@ router.get('/register', checkNotAuthenticated, (req, res) => {
 // Route to handle registration form submission
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, confirmPassword } = req.body;
+    
+    const {first_name, last_name, username, email, password, confirmPassword } = req.body;
 
     // Check if the passwords match
     if (password !== confirmPassword) {
@@ -36,7 +37,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Create the user using the User class
-    const userId = await User.createUser(username, email, password);
+    const userId = await User.createUser(username, email, password, first_name, last_name,);
 
     // Redirect to login or a success page
     res.redirect('/Login');

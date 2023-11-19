@@ -80,6 +80,7 @@
                 <th>Topics</th>
                 <th>Date Created</th>
                 <th>Last Score</th>
+                <th></th>
                 
             </tr>
         </thead>
@@ -279,15 +280,40 @@
 </html>
 
 <script>
-function createAndAppendTableRow(data, parentElementId) {
+function createAndAppendTableRow(data, parentElementId, quiz_id) {
     const tr = document.createElement('tr');
 
     // Loop through the data array and create <td> elements for each item
     data.forEach(item => {
-        const td = document.createElement('td');
+        let td = document.createElement('td');
         td.textContent = item;
         tr.appendChild(td);
     });
+    
+    let td = document.createElement('td');
+    td.classList.add("quiz_functions_frame")
+    td.style.flexDirection = "row";
+    button = document.createElement("button")
+    button.textContent="Try"
+    edit_button = document.createElement("button");
+    edit_button.classList.add("edit_button");
+    edit_button.innerHTML = `
+    
+        <svg class="svg-icon" fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#a649da" stroke-linecap="round" stroke-width="2">
+            <path d="m20 20h-16"></path>
+            <path clip-rule="evenodd" d="m14.5858 4.41422c.781-.78105 2.0474-.78105 2.8284 0 .7811.78105.7811 2.04738 0 2.82843l-8.28322 8.28325-3.03046.202.20203-3.0304z" fill-rule="evenodd"></path>
+        </g>
+        </svg>
+        <span class="edit_button_label">Edit</span>
+    `;
+    button.onclick = function(){
+        sessionStorage.setItem("quizID",quiz_id)
+        window.location.href = "/user/quizzes/quiz"
+    }
+    td.appendChild(button)
+    td.appendChild(edit_button)
+    tr.appendChild(td);
 
     // Append the <tr> element to the specified parent element
     const parentElement = document.getElementById(parentElementId);
@@ -329,11 +355,11 @@ document.addEventListener("DOMContentLoaded", async function(){
     try {
         const quizzes = await fetchQuizzes();
         const quizData = quizzes.quizzes;
-
+        console.log(quizzes)
         quizData.forEach(quiz => {
             console.log(quiz)
             const rowData = [quiz["quiz_name"], "Mathematics", "Geometry, Algebra", quiz["creation_date"], "89%"];
-            createAndAppendTableRow(rowData, "table_body");
+            createAndAppendTableRow(rowData, "table_body",quiz["quiz_id"]);
         });
 
         // Initialize DataTable after populating data

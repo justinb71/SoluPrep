@@ -2,21 +2,25 @@ const { Client } = require("pg");
 require('dotenv').config();
 
 // Function to get user's monthly experiences
-async function getUserMonthlyExperiences(userId) {
-  const client = new Client(process.env.DATABASE_URL);
+async function updateUserById(userId) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+
   try {
     await client.connect();
 
     const query = `
-      SELECT *
-      FROM "quizquestions"
-      WHERE quiz_id = $1;
+      UPDATE public.users
+      SET first_name = 'Justin', last_name = 'Brown'
+      WHERE user_id = $1
     `;
 
-    const values = ["892680844432670721"];
-
-    const result = await client.query(query, values);
-    console.log(result.rows)
+    const result = await client.query(query, [userId]);
+    console.log(result.rows);
     return result.rows;
   } catch (err) {
     console.error("Error querying database:", err);
@@ -26,7 +30,7 @@ async function getUserMonthlyExperiences(userId) {
   }
 }
 
-getUserMonthlyExperiences("2")
+updateUserById("2");
 
 // // Function to add or update monthly experience
 // async function addOrUpdateMonthlyExperience(userId, month, experienceGained) {

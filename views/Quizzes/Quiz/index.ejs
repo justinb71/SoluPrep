@@ -5,15 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <%- include('../../partials/profileNavbar'); %>
 </head>
+
 <body>
+    
     <div class="main">
+        <div class="line-wobble-frame">
+            <div class="line-wobble"></div>
+            <h2 style="position: relative; top:calc(50% - 100px)">Loading</h2>
+        </div>
+        
+        
         <div class="quiz-quiz-header">
             <h1 id="quizName">A Level Mathematics Revision</h1>
             <h2>Topics:</h2>
             <h3>Diffrentiation, Binomial Expansion</h3>
         </div>
-
-
         <div class="quiz-quiz-questions-frame">
         </div>
     </div>
@@ -21,6 +27,67 @@
 
 </html>
 
+<style>
+    .line-wobble-frame{
+        width: calc(100% - 345px);
+        height: 100vh;
+        background: var(--gray-25, #FCFCFD);
+        z-index: 4;
+        position: fixed;
+    }
+    .line-wobble {
+ --uib-size: 80px;
+ --uib-speed: 1.55s;
+ --uib-color: black;
+ --uib-line-weight: 5px;
+ position: relative;
+ width: 50%;
+ left:25%;
+ top:50%;
+ height: 100%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ height: var(--uib-line-weight);
+
+ border-radius: calc(var(--uib-line-weight) / 2);
+ overflow: hidden;
+ transform: translate3d(0, 0, 0);
+}
+
+.line-wobble::before {
+ content: '';
+ position: absolute;
+ top: 0;
+ left: 0;
+ height: 100%;
+ width: 100%;
+ background-color: var(--uib-color);
+ opacity: 0.1;
+}
+
+.line-wobble::after {
+ content: '';
+ height: 100%;
+ width: 100%;
+ border-radius: calc(var(--uib-line-weight) / 2);
+ animation: wobble var(--uib-speed) ease-in-out infinite;
+ transform: translateX(-90%);
+ background-color: var(--uib-color);
+}
+
+@keyframes wobble {
+ 0%,
+  100% {
+  transform: translateX(-90%);
+ }
+
+ 50% {
+  transform: translateX(90%);
+ }
+}
+
+</style>
 
 <script>
 
@@ -179,14 +246,28 @@ async function fetchQuestions(quizID) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async function() {
     let instance = new createQuestion();
+    // Define a sleep function
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function fadeLoop() {
+        for (let i = 1; i > -1; i-=0.01) {
+            await sleep(5);
+            document.querySelector(".line-wobble-frame").style.opacity = i
+        }
+        document.querySelector(".line-wobble-frame").style.visibility = "hidden"
+    }
 
     quizID = sessionStorage.getItem("quizID");
     quizID = quizID.toString();
 
     fetchQuestions(quizID)
     .then(result=>{
+
+        
         questions = result.generatedQuestions;
         quizName = result.quizName[0].quiz_name;
         console.log(questions)
@@ -213,6 +294,7 @@ document.addEventListener("DOMContentLoaded", function() {
       catch{
         
       }
+      fadeLoop()
       
    });
     })

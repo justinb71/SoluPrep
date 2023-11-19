@@ -177,6 +177,37 @@ input[type="text"]{
     
 }
 
+input[type="email"]{
+    display: flex;
+    padding: 10px 14px;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid var(--gray-300, #D0D5DD);
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    outline: transparent;
+    width: 330px;
+    
+}
+
+input[type="password"]{
+    display: flex;
+    padding: 10px 14px;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid var(--gray-300, #D0D5DD);
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    outline: transparent;
+    padding-right: 30px;
+    width: 313px;
+    
+}
+
 textarea{
     margin: 2rem;
     display: flex;
@@ -198,21 +229,7 @@ textarea{
     
 }
 
-input[type="password"]{
-    display: flex;
-    padding: 10px 14px;
-    align-items: center;
-    gap: 8px;
-    align-self: stretch;
-    border-radius: 8px;
-    border: 1px solid var(--gray-300, #D0D5DD);
-    background: var(--white, #FFF);
-    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    outline: transparent;
-    padding-right: 30px;
-    width: 313px;
-    
-}
+
 
 .password-container {
     position: relative;
@@ -349,9 +366,9 @@ button:active{
 
 
 .nav_featured_card{
+    visibility: hidden;    
     display: flex;
     padding: 20px 16px;
-    
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
@@ -388,7 +405,7 @@ button:active{
 }
 
 .settings_button {
-    
+    margin-bottom: 10px;
     display: flex;
     padding: 8px 12px;
     align-items: flex-start;
@@ -604,12 +621,11 @@ a{
 }
 
 .profile_icon{
-    
     margin: 0;
     display: flex;
-    height: 20px;
-    width: 20px;
-    padding: 20px;
+    height: 40px !important;
+    width: 40px !important;
+    padding:30px!important ;
     
     justify-content: center;
     align-items: center;
@@ -1294,6 +1310,23 @@ letter-spacing: -0.96px;
     gap: 1rem;
 }
 
+.profile-frame{
+    width: 400px;
+    border: 1px solid var(--gray-200, #EAECF0);
+    border-radius: 7px;
+}
+
+.profile-button{
+    border-top: 1px solid var(--gray-200, #EAECF0);
+    border-radius: 0;
+    background-color: transparent;
+    text-align: left;
+    font-weight: 500;
+}
+.profile-button:hover{
+    filter: brightness(1);
+    background-color: rgba(240, 240, 240, 0.658);
+}
 
 @media (min-width: 1200px) {
     .grid {
@@ -1515,6 +1548,56 @@ margin: 0;
     border: 1px solid var(--gray-200, #EAECF0);
 }
 
+.quiz_functions_frame{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.quiz_functions_frame button{
+    background: #49da9e5e;
+    height: 40px;
+    padding: 5px 15px;
+
+}
+.edit_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 85px;
+    border: none;
+    background: #a549da3d !important;
+    cursor: pointer;
+  }
+  .edit_button:hover {
+    background: #a549da62;
+  }
+  
+  .edit_button:hover .svg-icon {
+    animation: edit_button_animation 1s linear infinite;
+  }
+  
+
+
+  @keyframes edit_button_animation {
+    0% {
+      transform: translateX(0);
+    }
+  
+    25% {
+      transform: translateX(-1px);
+    }
+  
+    75% {
+      transform: translateX(1px);
+    }
+  
+    100% {
+      transform: translateX(0);
+    }
+  }
 
 /* Media query for phones */
 @media (max-width: 768px) {

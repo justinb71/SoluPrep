@@ -10,6 +10,7 @@ router.use(express.json());
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
+    console.log(req.user)
     return next(); 
   }
   res.redirect('/login');
@@ -36,6 +37,23 @@ router.get('/dashboard', isAuthenticated, (req, res) => {
       user["averagescore "] = user["averagescore "] * 100;
       user["this-months-experience"] = 0;
       res.render('Dashboard', { user: user });
+    });
+});
+
+router.get('/user/profile', isAuthenticated, (req, res) => {
+  let user = req.user;
+  
+  getExperienceGainedThisMonth(user.user_id)
+    .then(experienceGained => {
+      user["this-months-experience"] = experienceGained;
+      user["averagescore "] = user["averagescore "] * 100;
+      res.render('Profile', { user: user });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      user["averagescore "] = user["averagescore "] * 100;
+      user["this-months-experience"] = 0;
+      res.render('Profile', { user: user });
     });
 });
 

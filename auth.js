@@ -20,6 +20,7 @@ passport.use(new LocalStrategy({
     if (!bcrypt.compareSync(password, user.password_hash)) {
       return done(null, false, { message: 'Incorrect email or password.' });
     }
+
     return done(null, user);
   } catch (err) {
     return done(err);

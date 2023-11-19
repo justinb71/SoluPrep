@@ -11,12 +11,12 @@ const client = new Client(process.env.DATABASE_URL);
 client.connect();
 
 class User {
-  static async createUser(username, email, password) {
+  static async createUser(username, email, password,first_name, last_name) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const query = {
-      text: 'INSERT INTO users (username, email, password_hash, subscription_level) VALUES ($1, $2, $3, $4) RETURNING user_id',
-      values: [username, email, hashedPassword,1],
+      text: 'INSERT INTO users (username, email, password_hash, subscription_level, first_name, last_name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING user_id',
+      values: [username, email, hashedPassword, 1, first_name, last_name],
     };
 
     const result = await client.query(query);
