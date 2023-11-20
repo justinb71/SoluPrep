@@ -69,6 +69,15 @@ app.get('/pricing', (req, res) => {
   res.render('Pricing');
 });
 
+app.get('/legal', (req, res) => {
+  res.render('Legal');
+});
+
+app.get('/privacy', (req, res) => {
+  res.render('Privacy');
+});
+
+
 app.get('/about', (req, res) => {
   res.render('About');
 });
