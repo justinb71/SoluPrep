@@ -183,6 +183,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const checkbox = document.getElementById('checkbox');
     const navbarContents = document.querySelector('.authenticated_navbar');
+    const line_wobble_frame = document.querySelector('.line-wobble-frame');
     const main = document.querySelector('.main');
     const hamburger = document.querySelector('#menuToggle');
 
@@ -206,6 +207,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (main) {
                     main.style.left = '0px';
                     main.style.width = '100%';
+                    line_wobble_frame.style.width = '100%';
+                    line_wobble_frame.style.left = '0px';
                     hamburger.style.left = "99px";
                     hamburger.style.top = "-33px";
                 }
@@ -214,6 +217,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (main) {
                     main.style.left = '312px';
                     main.style.width = 'calc(100% - 312px)';
+                    line_wobble_frame.style.width = 'calc(100% - 312px)';
+                    line_wobble_frame.style.left = '312px';
                     hamburger.style.left = "0px";
                     hamburger.style.top = "0px";
                 }
@@ -233,6 +238,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 main.style.width = '100%';
                 hamburger.style.left = "99px";
                 hamburger.style.top = "-33px";
+                line_wobble_frame.style.width = '100%';
+                line_wobble_frame.style.left = '0px';
             }
         } else {
             navbarContents.classList.remove('hide-navbar');
@@ -241,6 +248,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 main.style.width = 'calc(100% - 312px)';
                 hamburger.style.left = "0px";
                 hamburger.style.top = "0px";
+                line_wobble_frame.style.width = 'calc(100% - 312px)';
+                line_wobble_frame.style.left = '312px';
             }
         }
 

@@ -313,7 +313,7 @@ button:active{
     padding: 0px 16px;
     height: 100vh;
     border-right: 1px solid #eceef1;
-    transition: 0.3;
+    transition: 0.3
 }
 
 .hide-navbar {
@@ -712,6 +712,14 @@ footer h2{
     color: var(--white, #FFF);
 
     
+}
+
+.error{
+    color: #ffffff;
+    border: 1px solid #F97066;
+    background: #F97066;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    color: var(--white, #FFF); 
 }
 
 .success{
@@ -1535,7 +1543,7 @@ margin: 0;
     padding: 0.5rem;
     margin: 10px;
     border-radius: 20px;
-    border: 1px solid var(--gray-200, #EAECF0);
+    
 }
 
 .quiz_functions_frame{

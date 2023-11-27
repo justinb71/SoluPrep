@@ -39,11 +39,14 @@
 
 <style>
     .line-wobble-frame{
-        width: calc(100% - 345px);
+        width: calc(100% - 315px);
+        
         height: 100vh;
         background: var(--gray-25, #FCFCFD);
         z-index: 4;
         position: fixed;
+        left:312px;
+        top:0px
     }
     .line-wobble {
  --uib-size: 80px;
@@ -281,18 +284,14 @@ document.addEventListener("DOMContentLoaded", async function() {
     fetchQuestions(quizID)
     .then(result=>{
 
-        
         questions = result.generatedQuestions;
         quizName = result.quizName[0].quiz_name;
         console.log(questions)
         answers = []
         questionIds = []
-        
-
 
         document.querySelector("#quizName").textContent = quizName
     
-   
       let questionNumber = 1
    Object.keys(questions).forEach(key => {
     
@@ -339,9 +338,11 @@ document.addEventListener("DOMContentLoaded", async function() {
                     console.log(answers[i])
                     console.log(optionNumber)
                     if (optionNumber == answers[i]){
-                        console.log("Correct!!")
+                        questionElement.classList.add("success")
+                        questionElement.classList.remove("error")
                     }else{
-                        console.log("Incorrect")
+                        questionElement.classList.add("error")
+                        questionElement.classList.remove("success")
                     }
                     
                 } else {
