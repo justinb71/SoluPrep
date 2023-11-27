@@ -162,7 +162,10 @@ p{
     line-height: 20px;
 }
 
-input[type="text"]{
+input[type="text"],
+input[type="email"],
+input[type="date"],
+input[type="password"] {
     display: flex;
     padding: 10px 14px;
     align-items: center;
@@ -174,38 +177,18 @@ input[type="text"]{
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     outline: transparent;
     width: 330px;
-    
+    color: var(--gray-700, #344054);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+
+
 }
 
-input[type="email"]{
-    display: flex;
-    padding: 10px 14px;
-    align-items: center;
-    gap: 8px;
-    align-self: stretch;
-    border-radius: 8px;
-    border: 1px solid var(--gray-300, #D0D5DD);
-    background: var(--white, #FFF);
-    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    outline: transparent;
-    width: 330px;
-    
-}
-
-input[type="password"]{
-    display: flex;
-    padding: 10px 14px;
-    align-items: center;
-    gap: 8px;
-    align-self: stretch;
-    border-radius: 8px;
-    border: 1px solid var(--gray-300, #D0D5DD);
-    background: var(--white, #FFF);
-    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    outline: transparent;
+input[type="password"] {
     padding-right: 30px;
     width: 313px;
-    
 }
 
 textarea{
@@ -322,6 +305,7 @@ button:active{
     display: flex;
     position: fixed;
     width: 312px;
+    position: fixed;
     align-items: flex-start;
     flex-shrink: 0;
     align-self: stretch;
@@ -329,6 +313,12 @@ button:active{
     padding: 0px 16px;
     height: 100vh;
     border-right: 1px solid #eceef1;
+    transition: 0.3;
+}
+
+.hide-navbar {
+    left:-352px;
+    z-index: 10000;
 }
 
 .authenticated_navbar_contents{
@@ -495,17 +485,17 @@ button:active{
   }
 
 .main{
-    width: calc(100% - 345px);
+    width: calc(100% - 312px);
     padding: 0;
-
     position: absolute;
-    left:345px;
+    left:312px;
     top:0px;
     background: var(--gray-25, #FCFCFD);
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
-
+    transition: .3s;
 }
 .floating{
     border: 1px solid #F2F4F7;

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MB65CC4F');</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WY5PDZBQFT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WY5PDZBQFT');
+</script>
+    <%- include('../partials/navbar'); %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <style>
+        .error-message {
+            color: red;
+            margin: 0;
+        }
+    </style>
+</head>
+    <body>
+
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MB65CC4F"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+
+        <div class="flex justify centre">  
+            <div class="flex bordered" style="width: 360px; flex-direction: column;">
+                <h2 style="margin-bottom: 0px;">Lets make this yours!</h2>
+                <h5 style="margin: 0px">Help us personalise your experience</h5>
+                <% if (errorMessage) { %>
+                    <p class="error-message"><%= errorMessage %></p>
+                <% } %>
+
+                <form id="personaliseFrom" action="/personalise" method="POST" onsubmit="return ">
+            
+                    <div>
+                        <p style="margin-top: 0px;">Date Of Birth</h4>
+                        <input id="DOF" type="date" name="date_of_birth" required="true">
+                    
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <p style="margin-top: 0px; width: 100%;">Select Your Education Level</p>
+                            <div class="radio-input two">
+                                <label>
+                                <input type="radio" id="value-1" name="level-radio" value="A Level" checked required>
+                                <span>GCSE</span>
+                                </label>
+                                <label>
+                                <input type="radio" id="value-2" name="level-radio" value="GCSE" required>
+                                <span>A Level</span>
+                                </label>
+                                <span class="selection-two"></span>
+                            </div>
+                        <br>
+                        <br>
+                    </div>
+                    
+                    
+                    <button class="secondary" style="width: 100%;" type="submit">Get Started</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+
+<style>
+    .radio-input input {
+    display: none;
+    }
+
+    .radio-input {
+        --container_width: 360px;
+        height: fit-content;
+        position: relative;
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+        background-color: #fff;
+        color: #000000;
+        width: var(--container_width);
+        overflow: hidden;
+        border: 1px solid rgba(53, 52, 52, 0.226);
+    }
+
+    .radio-input label {
+        all: unset;
+        text-align: center;
+        color: var(--gray-500, #667085);
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 18px;
+        width: 100%;
+        padding: 10px;
+        height: 100%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+        font-weight: 600;
+        letter-spacing: -1px;
+        font-size: 14px;
+        font-weight: 500;
+        
+    }
+
+
+    .selection-two {
+        
+        display: none;
+        position: absolute;
+        height: 100%;
+        width: calc(var(--container_width) / 2);
+        z-index: 0;
+        left: 0;
+        top: 0;
+        transition: .15s ease;
+    }
+
+    .radio-input label:has(input:checked) {
+        color: #fff;
+    }
+
+    .radio-input label:has(input:checked) ~ .selection-three, .selection-two {
+        background-color: #7f56d9;
+        display: inline-block;
+    }
+
+
+    .two label:nth-child(1):has(input:checked) ~ .selection-two {
+        transform: translateX(calc(var(--container_width) * 0/2));
+    }
+
+    .two label:nth-child(2):has(input:checked) ~ .selection-two {
+        transform: translateX(calc(var(--container_width) * 1/2));
+    }
+</style>

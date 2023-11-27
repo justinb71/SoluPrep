@@ -118,12 +118,13 @@ class createQuestion{
         return id;
     }
     
-    createMultipleChoiceQuestion(questionText, options){
-        const questionId = this.generateUniqueId();
+    createMultipleChoiceQuestion(questionText, options,questionId){
+        
         this.questionData.push([questionId, 'Multiple Choice']);;
 
         const questionFrame = document.createElement('div');
         questionFrame.classList.add('quiz-quiz-question-frame');
+        questionFrame.classList.add('multi');
         questionFrame.id = questionId;
 
         const questionTitle = document.createElement('h1');
@@ -144,6 +145,7 @@ class createQuestion{
         optionsContainer.classList.add('quiz-quiz-question-radio-container');
         
         options.forEach((optionText, index) => {
+            
             const optionWrapper = document.createElement('div');
             optionWrapper.classList.add('quiz-quiz-question-radio-wrapper');
 
@@ -232,6 +234,8 @@ class createQuestion{
 }
 
 
+
+
 async function fetchQuestions(quizID) {
   try {
     const url = `/user/quizzes/get-questions?quizID=${quizID}`;
@@ -281,6 +285,9 @@ document.addEventListener("DOMContentLoaded", async function() {
         questions = result.generatedQuestions;
         quizName = result.quizName[0].quiz_name;
         console.log(questions)
+        answers = []
+        questionIds = []
+        
 
 
         document.querySelector("#quizName").textContent = quizName
@@ -288,12 +295,16 @@ document.addEventListener("DOMContentLoaded", async function() {
    
       let questionNumber = 1
    Object.keys(questions).forEach(key => {
+    
        const question = questions[key]["question"];
+       
        try{
+        answers.push(question["ANSWER"])
+        questionIds.push(questions[key]["question_id"])
         if (question["TYPE"] == "Multiple Choice"){
             text = questionNumber + ". " + question["QUESTION"]
             options =  question["OPTIONS"]
-            instance.createMultipleChoiceQuestion(text,options);
+            instance.createMultipleChoiceQuestion(text,options,(questions[key]["question_id"]));
         } else if (question["TYPE"] == "Short Answer"){
             instance.createShortAnswerQuestion(questionNumber + ". " + question["QUESTION"]);
         } else if (question["TYPE"] == "Long Answer"){
@@ -307,6 +318,44 @@ document.addEventListener("DOMContentLoaded", async function() {
       fadeLoop()
       
    });
+
+   submitButton = document.createElement("button")
+   submitButton.textContent = "Submit"
+   submitButton.onclick = function(){
+    for (let i = 0; i < answers.length; i++) {
+        // Assuming questionIds is an array of valid HTML element IDs
+        let questionElement = document.getElementById(questionIds[i]);
+
+        // Check if the element is found before accessing its classList
+        if (questionElement) {
+            if (questionElement.classList.contains("multi")) {
+                // Find the selected radio button within the current question
+                const selectedRadioButton = questionElement.querySelector('input[type="radio"]:checked');
+
+                if (selectedRadioButton) {
+                    // Extract the option number from the selected radio button's ID
+                    const optionNumber = selectedRadioButton.id.split('-')[0].replace('option', '') - 1;
+                    
+                    console.log(answers[i])
+                    console.log(optionNumber)
+                    if (optionNumber == answers[i]){
+                        console.log("Correct!!")
+                    }else{
+                        console.log("Incorrect")
+                    }
+                    
+                } else {
+                    console.log(`Question ${questionIds[i]} - No option selected`);
+                }
+            }
+        } 
+    }
+
+
+}
+   
+   document.querySelector(".quiz-quiz-questions-frame").appendChild(submitButton)
+        
     })
 
     

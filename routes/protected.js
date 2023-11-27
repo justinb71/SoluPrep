@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const { Client } = require("pg");
+const User = require('../models/user');
 
 require('dotenv').config();
 
@@ -10,7 +11,7 @@ router.use(express.json());
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
-    console.log(req.user)
+    
     return next(); 
   }
   res.redirect('/login');
@@ -21,7 +22,18 @@ router.get('/profile', isAuthenticated, (req, res) => {
   res.render('profile', { user: req.user }); 
 });
 
-
+router.get('/get-started', isAuthenticated, async (req, res) => {
+  let user = req.user;
+  personalised = await User.checkIfPersonalised(user.user_id)
+  console.log(personalised)
+  if (personalised){
+    res.redirect("/dashboard")
+  }else{
+    res.render('GetStarted', { user: user, errorMessage: req.flash('error')});
+  }
+  
+  
+});
 
 router.get('/dashboard', isAuthenticated, (req, res) => {
   let user = req.user;
@@ -471,7 +483,7 @@ async function generateQuestion(question) {
   }
 
   try {
-    const response = await fetch('http://127.0.0.1:5000/' + qType, {
+    const response = await fetch('http://77.68.52.72:8000/' + qType, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

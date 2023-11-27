@@ -35,6 +35,14 @@
               </svg>
             SoluPrep AI
         </a>
+        <div id="menuToggle">
+            <input id="checkbox" type="checkbox">
+            <label class="toggle" for="checkbox">
+                <div class="bar bar--top"></div>
+                <div class="bar bar--middle"></div>
+                <div class="bar bar--bottom"></div>
+            </label>
+          </div>
         </div>
         <button class="authenticated_navbar_item_base" onclick="window.location.href='/'">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -171,4 +179,156 @@
         }
     })
     })();
+
+document.addEventListener('DOMContentLoaded', function () {
+    const checkbox = document.getElementById('checkbox');
+    const navbarContents = document.querySelector('.authenticated_navbar');
+    const main = document.querySelector('.main');
+    const hamburger = document.querySelector('#menuToggle');
+
+    // Function to check the checkbox based on screen width
+    function checkCheckboxByScreenWidth() {
+        if (window.innerWidth < 1024) { // Adjust the screen width threshold as needed
+            checkbox.checked = true;
+            navbarContents.classList.add('hide-navbar');
+            if (main) {
+                main.style.left = '0px';
+                main.style.width = '100%';
+                hamburger.style.left = "99px";
+                hamburger.style.top = "-33px";
+            }
+        } else {
+            const savedCheckboxState = localStorage.getItem('checkboxState');
+            checkbox.checked = savedCheckboxState === 'checked';
+
+            if (checkbox.checked) {
+                navbarContents.classList.add('hide-navbar');
+                if (main) {
+                    main.style.left = '0px';
+                    main.style.width = '100%';
+                    hamburger.style.left = "99px";
+                    hamburger.style.top = "-33px";
+                }
+            } else {
+                navbarContents.classList.remove('hide-navbar');
+                if (main) {
+                    main.style.left = '312px';
+                    main.style.width = 'calc(100% - 312px)';
+                    hamburger.style.left = "0px";
+                    hamburger.style.top = "0px";
+                }
+            }
+        }
+    }
+
+    // Check the checkbox on page load
+    checkCheckboxByScreenWidth();
+
+    // Attach an event listener to the checkbox
+    checkbox.addEventListener('change', function () {
+        if (this.checked) {
+            navbarContents.classList.add('hide-navbar');
+            if (main) {
+                main.style.left = '0px';
+                main.style.width = '100%';
+                hamburger.style.left = "99px";
+                hamburger.style.top = "-33px";
+            }
+        } else {
+            navbarContents.classList.remove('hide-navbar');
+            if (main) {
+                main.style.left = '312px';
+                main.style.width = 'calc(100% - 312px)';
+                hamburger.style.left = "0px";
+                hamburger.style.top = "0px";
+            }
+        }
+
+        // Save checkbox state to local storage
+        localStorage.setItem('checkboxState', this.checked ? 'checked' : 'unchecked');
+    });
+
+    // Attach a resize event listener to update the checkbox on window resize
+    window.addEventListener('resize', function () {
+        checkCheckboxByScreenWidth();
+    });
+});
+
+
+
 </script>
+
+<style>
+    #menuToggle{
+        position: relative;
+        z-index: 100;
+    }
+    #checkbox {
+    display: none;
+    }
+
+    .toggle {
+    position: relative;
+    width: 20px;
+    cursor: pointer;
+    margin: auto;
+    display: block;
+    height: calc(4px * 3 + 11px * 2);
+    }
+
+    .bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: calc(4px / 2);
+    background: #5f5c64;
+    color: inherit;
+    opacity: 1;
+    transition: none 0.35s cubic-bezier(.5,-0.35,.35,1.5) 0s;
+    }
+
+    /***** Collapse Animation *****/
+
+    .bar--top {
+    bottom: calc(25% + 11px + 4px/ 2);
+    transition-property: bottom,margin,transform;
+    transition-delay: calc(0s + 0.35s),0s,0s;
+    }
+
+    .bar--middle {
+    top: calc(50% - 4px/ 2);
+    transition-property: top,opacity;
+    transition-duration: 0.35s,0s;
+    transition-delay: calc(0s + 0.35s * 1.3),calc(0s + 0.35s * 1.3);
+    }
+
+    .bar--bottom {
+    top: calc(25% + 11px + 4px/ 2);
+    transition-property: top,transform;
+    transition-delay: 0s;
+    }
+
+    #checkbox:checked + .toggle .bar--top {
+    bottom: calc(50% - 11px - 4px);
+    margin-bottom: calc(11px + 4px/ 2);
+    transform: rotate(45deg);
+    transition-delay: calc(0s + 0.35s * .3),calc(0s + 0.35s * 1.3),calc(0s + 0.35s * 1.3);
+    }
+
+    #checkbox:checked + .toggle .bar--middle {
+    top: calc(50% + 11px);
+    opacity: 0;
+    transition-duration: 0.35s,0s;
+    transition-delay: 0s,calc(0s + 0.35s);
+    }
+
+    #checkbox:checked + .toggle .bar--bottom {
+    top: calc(50% - 4px/ 2);
+    transform: rotate(-45deg);
+    transition-delay: calc(0s + 0.35s * 1.3),calc(0s + 0.35s * 1.3);
+    }
+
+    
+
+</style>

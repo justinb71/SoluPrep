@@ -23,6 +23,51 @@ class User {
     return result.rows[0].user_id;
   }
 
+  static async checkIfPersonalised(user_id) {
+    try {
+        // Check if the user has dateofbirth and education_level
+        const query = {
+            text: `
+                SELECT dateofbirth, education_level
+                FROM public.users
+                WHERE user_id = $1;
+            `,
+            values: [user_id],
+        };
+
+        const result = await client.query(query);
+
+        // If the user is found and has both date_of_birth and education_level
+        return (
+          result.rows.length > 0 &&
+          result.rows[0].dateofbirth !== null &&
+          result.rows[0].dateofbirth !== '' &&
+          result.rows[0].education_level !== null &&
+          result.rows[0].education_level !== ''
+      );
+    } catch (error) {
+        // Handle the error, e.g., log it or throw an exception
+        console.error('Error checking personalized status:', error);
+        throw error;
+    }
+  }
+
+  static async personaliseUser(user_id, dateofbirth, education_level) {
+
+    const query = {
+      text: `
+        UPDATE public.users
+        SET dateofbirth = $2, education_level = $3
+        WHERE user_id = $1;
+      `,
+      values: [user_id, dateofbirth, education_level],
+    };
+    
+
+    await client.query(query);
+    
+  }
+
   static async findByEmail(email) {
     const query = {
       text: 'SELECT * FROM users WHERE email = $1',

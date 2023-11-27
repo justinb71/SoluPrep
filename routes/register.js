@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user'); // Import your user model
+const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const passport = require('passport');
 router.use(express.urlencoded({ extended: true }));
 
 function checkNotAuthenticated(req, res, next){
@@ -38,9 +39,14 @@ router.post('/register', async (req, res) => {
 
     // Create the user using the User class
     const userId = await User.createUser(username, email, password, first_name, last_name,);
+    
+    // Authenticate the user immediately after successful registration
+    passport.authenticate('local', {
+      successRedirect: '/get-started',
+      failureRedirect: '/login',
+      failureFlash: true,
+    })(req, res); 
 
-    // Redirect to login or a success page
-    res.redirect('/Login');
   } catch (error) {
     console.error('Error during registration:', error);
     req.flash('error', 'An error occurred during registration');
@@ -48,5 +54,22 @@ router.post('/register', async (req, res) => {
     res.redirect('/Register');
   }
 });
+
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next(); 
+  }
+  
+};
+
+router.post('/personalise', async (req, res) => {
+  const {date_of_birth } = req.body;
+  const level = req.body["level-radio"];
+  const userId = req.user.user_id;
+
+  await User.personaliseUser(userId,date_of_birth,level)
+  res.redirect('/dashboard');
+
+})
 
 module.exports = router;
