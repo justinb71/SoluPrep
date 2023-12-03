@@ -302,6 +302,7 @@ button:active{
 }
 
 .authenticated_navbar{
+    background: #ffffff;
     display: flex;
     position: fixed;
     width: 312px;
@@ -313,12 +314,12 @@ button:active{
     padding: 0px 16px;
     height: 100vh;
     border-right: 1px solid #eceef1;
-    transition: 0.3
+    transition: 0.3s;
+    z-index: 10000;
 }
 
 .hide-navbar {
     left:-352px;
-    z-index: 10000;
 }
 
 .authenticated_navbar_contents{
@@ -1222,7 +1223,7 @@ letter-spacing: -0.96px;
     width: calc(100% - 365px);
     position: absolute;
     left: 0px;
-
+    top: -14px;
 }
 
 .quiz-create-questions-table{

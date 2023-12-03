@@ -438,7 +438,18 @@ router.post("/user/generateQuiz", isAuthenticated, async (req, res) => {
   }
 });
 
+router.delete("/user/quizzes/delete-quiz/:quizId", isAuthenticated, async (req, res) => {
+  const quiz_id = req.params.quizId;
+  const userId = req.user.user_id;
+  
 
+  deleteQuiz(userId, quiz_id)
+  .then(deletedQuiz => res.status(200).json({ message: 'Quiz deleted successfully', deletedQuiz }))
+  .catch(error => res.status(500).json({ error: 'An error occurred' }));
+  
+  
+
+})
 
 async function createPaper(userId) {
   const client = new Client({
@@ -497,9 +508,11 @@ async function generateQuestion(question) {
       })
     });
 
+
     if (response.ok) {
       const responseData = await response.json();
       const result = responseData.result; // Parse the result string to JSON
+
       return result;
     } else {
       // Handle error, throw an exception or return an appropriate value
@@ -561,7 +574,22 @@ async function createQuestion(userId,questionData) {
 
     const result = await client.query(insertQuery, insertValues);
 
-    // The generated paper_id is returned as part of the result
+    try {  
+      // Insert a new record with the given user_id and creation_date
+      const insertQuery = `
+      UPDATE users
+      SET questions_generated = questions_generated + 1
+      WHERE user_id = ($1);
+      
+      `;
+      const insertValues = [userId];
+      await client.query(insertQuery, insertValues);
+  
+    } catch (err) {
+      console.error("Error executing query:", err);
+    } finally {
+      await client.end();
+    }t
     const question_id = result.rows[0].question_id;
     return question_id;
   } catch (err) {
@@ -596,7 +624,7 @@ async function createQuizQuestion(quizId,questionId) {
 }
 
 async function getQuizQuestions(quizId) {
-  console.log(quizId)
+  
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
   });
@@ -661,7 +689,7 @@ router.get("/user/quiz/get-quizzes", isAuthenticated, async (req,res) =>{
 })
 
 
-async function getQuizzes(userId){
+async function getQuizzes(userId) {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
   });
@@ -670,13 +698,27 @@ async function getQuizzes(userId){
     await client.connect();
 
     const selectQuery = `
-      SELECT quiz_name, quiz_id, creation_date
-      FROM public.quizzes
-      WHERE user_id = $1
+      SELECT DISTINCT ON (q.quiz_id)
+        q.quiz_id,
+        q.user_id AS quiz_owner_id,
+        q.quiz_name,
+        q.creation_date AS quiz_creation_date,
+        a.attempt_id,
+        a.user_id AS attempt_user_id,
+        a.attempt_date,
+        a.score
+      FROM
+        public.quizzes q
+      LEFT JOIN
+        public.attempts a ON q.quiz_id = a.quiz_id
+      WHERE
+        q.user_id = $1
+      ORDER BY
+        q.quiz_id, a.attempt_date DESC;
     `;
-    
+
     const { rows } = await client.query(selectQuery, [userId]);
-    
+
     return rows;
   } catch (err) {
     console.error("Error executing query:", err);
@@ -685,5 +727,27 @@ async function getQuizzes(userId){
     await client.end();
   }
 }
+
+async function deleteQuiz(userId,quizId) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+  try {
+    await client.connect();
+    console.log(quizId)
+    // Delete the quiz and check ownership
+    const deleteQuizQuery = 'DELETE FROM public.quizzes WHERE quiz_id = $1 AND user_id = $2';
+    const result = await client.query(deleteQuizQuery, [quizId, userId]);
+    console.log('Rows affected:', result.rowCount);
+
+  } catch (err) {
+    console.error("Error executing query:", err);
+  } finally {
+    // Close the database connection
+    await client.end();
+  }
+}
+
 
 module.exports = router;

@@ -197,6 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 main.style.width = '100%';
                 hamburger.style.left = "99px";
                 hamburger.style.top = "-33px";
+                if (line_wobble_frame){
+                        line_wobble_frame.style.width = '100%';
+                        line_wobble_frame.style.left = '0px';
+                    }
             }
         } else {
             const savedCheckboxState = localStorage.getItem('checkboxState');
@@ -207,18 +211,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (main) {
                     main.style.left = '0px';
                     main.style.width = '100%';
-                    line_wobble_frame.style.width = '100%';
-                    line_wobble_frame.style.left = '0px';
+                    if (line_wobble_frame){
+                        line_wobble_frame.style.width = '100%';
+                        line_wobble_frame.style.left = '0px';
+                    }
+                    
                     hamburger.style.left = "99px";
                     hamburger.style.top = "-33px";
                 }
             } else {
                 navbarContents.classList.remove('hide-navbar');
                 if (main) {
-                    main.style.left = '312px';
-                    main.style.width = 'calc(100% - 312px)';
-                    line_wobble_frame.style.width = 'calc(100% - 312px)';
-                    line_wobble_frame.style.left = '312px';
+                    main.style.left = '345px';
+                    main.style.width = 'calc(100% - 345px)';
+                    if (line_wobble_frame){
+                        line_wobble_frame.style.width = 'calc(100% - 345px)';
+                        line_wobble_frame.style.left = '345px';
+                    }
+                    
                     hamburger.style.left = "0px";
                     hamburger.style.top = "0px";
                 }
@@ -238,18 +248,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 main.style.width = '100%';
                 hamburger.style.left = "99px";
                 hamburger.style.top = "-33px";
-                line_wobble_frame.style.width = '100%';
-                line_wobble_frame.style.left = '0px';
+                if (line_wobble_frame){
+                        line_wobble_frame.style.width = '100%';
+                        line_wobble_frame.style.left = '0px';
+                    }
             }
         } else {
             navbarContents.classList.remove('hide-navbar');
             if (main) {
-                main.style.left = '312px';
-                main.style.width = 'calc(100% - 312px)';
+                main.style.left = '345px';
+                main.style.width = 'calc(100% - 345px)';
                 hamburger.style.left = "0px";
                 hamburger.style.top = "0px";
-                line_wobble_frame.style.width = 'calc(100% - 312px)';
-                line_wobble_frame.style.left = '312px';
+                if (line_wobble_frame){
+                        line_wobble_frame.style.width = 'calc(100% - 345px)';
+                        line_wobble_frame.style.left = '345px';
+                    }
             }
         }
 
@@ -271,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
     #menuToggle{
         position: relative;
         z-index: 100;
+        /* visibility: hidden; */
     }
     #checkbox {
     display: none;

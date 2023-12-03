@@ -95,191 +95,7 @@
             </tr>
         </thead>
         <tbody id="table_body">
-            <!-- <tr>
-                <td>Quiz 1</td>
-                <td>Mathematics</td>
-                <td>Geometry, Algebra</td>
-                <td>August 3rd, 2022</td>
-                <td>89%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 2</td>
-                <td>Physics</td>
-                <td>Mechanics</td>
-                <td>August 8th, 2022</td>
-                <td>78%</td>
-                
-            </tr>
-            <tr>
-                <td>Midterm</td>
-                <td>English</td>
-                <td>Grammar, Literature</td>
-                <td>September 15th, 2022</td>
-                <td>95%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 3</td>
-                <td>History</td>
-                <td>World War II</td>
-                <td>September 22nd, 2022</td>
-                <td>72%</td>
-                
-            </tr>
-            <tr>
-                <td>Project 1</td>
-                <td>Computer Science</td>
-                <td>Programming</td>
-                <td>October 5th, 2022</td>
-                <td>88%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 4</td>
-                <td>Biology</td>
-                <td>Cell Biology</td>
-                <td>October 12th, 2022</td>
-                <td>92%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 5</td>
-                <td>Chemistry</td>
-                <td>Periodic Table</td>
-                <td>November 2nd, 2022</td>
-                <td>81%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 6</td>
-                <td>Geography</td>
-                <td>Continents, Oceans</td>
-                <td>November 16th, 2022</td>
-                <td>87%</td>
-                
-            </tr>
-            <tr>
-                <td>Final Exam</td>
-                <td>Mathematics</td>
-                <td>Various Topics</td>
-                <td>December 10th, 2022</td>
-                <td>78%</td>
-                
-            </tr>
-            <tr>
-                <td>Project 2</td>
-                <td>Art</td>
-                <td>Painting</td>
-                <td>December 18th, 2022</td>
-                <td>94%</td>
-                
-            </tr>
-            
-            <tr>
-                <td>Quiz 7</td>
-                <td>Literature</td>
-                <td>Shakespearean Plays</td>
-                <td>January 8th, 2023</td>
-                <td>86%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 8</td>
-                <td>Physics</td>
-                <td>Optics</td>
-                <td>January 15th, 2023</td>
-                <td>79%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 9</td>
-                <td>Chemistry</td>
-                <td>Chemical Reactions</td>
-                <td>February 5th, 2023</td>
-                <td>83%</td>
-                
-            </tr>
-            <tr>
-                <td>Midterm</td>
-                <td>History</td>
-                <td>Ancient Civilizations</td>
-                <td>February 18th, 2023</td>
-                <td>91%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 10</td>
-                <td>Biology</td>
-                <td>Genetics</td>
-                <td>March 2nd, 2023</td>
-                <td>88%</td>
-                
-            </tr>
-            <tr>
-                <td>Project 3</td>
-                <td>Computer Science</td>
-                <td>Web Development</td>
-                <td>March 15th, 2023</td>
-                <td>95%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 11</td>
-                <td>Geography</td>
-                <td>Climate Zones</td>
-                <td>April 5th, 2023</td>
-                <td>77%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 12</td>
-                <td>Mathematics</td>
-                <td>Trigonometry</td>
-                <td>April 20th, 2023</td>
-                <td>82%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 13</td>
-                <td>Language</td>
-                <td>Vocabulary</td>
-                <td>May 3rd, 2023</td>
-                <td>94%</td>
-                
-            </tr>
-            <tr>
-                <td>Final Exam</td>
-                <td>Various Subjects</td>
-                <td>Comprehensive</td>
-                <td>June 1st, 2023</td>
-                <td>85%</td>
-                
-            </tr>
-            <tr>
-                <td>Project 4</td>
-                <td>Science</td>
-                <td>Experiment Report</td>
-                <td>June 10th, 2023</td>
-                <td>90%</td>
-                
-            </tr>
-            <tr>
-                <td>Quiz 14</td>
-                <td>Physical Education</td>
-                <td>Fitness Test</td>
-                <td>June 20th, 2023</td>
-                <td>96%</td>
-                
-            </tr>
-            <tr>
-                <td>Final Project</td>
-                <td>Art</td>
-                <td>Sculpture</td>
-                <td>June 30th, 2023</td>
-                <td>89%</td>
-                
-            </tr>
+            <!-- 
              -->
         </tbody>
     </table>
@@ -293,6 +109,8 @@
 function createAndAppendTableRow(data, parentElementId, quiz_id) {
     const tr = document.createElement('tr');
     tr.id = quiz_id
+    tr.classList.add("quiz-row")
+    
 
     // Loop through the data array and create <td> elements for each item
     data.forEach(item => {
@@ -307,6 +125,10 @@ function createAndAppendTableRow(data, parentElementId, quiz_id) {
 
     button = document.createElement("button")
     button.textContent="Try"
+    button.onclick = function(){
+        sessionStorage.setItem("quizID",quiz_id)
+        window.location.href = "/user/quizzes/quiz"
+    }
 
     edit_button = document.createElement("button");
     edit_button.classList.add("edit_button");
@@ -320,10 +142,7 @@ function createAndAppendTableRow(data, parentElementId, quiz_id) {
         </svg>
         <span class="edit_button_label">Edit</span>
     `;
-    button.onclick = function(){
-        sessionStorage.setItem("quizID",quiz_id)
-        window.location.href = "/user/quizzes/quiz"
-    }
+    
     td.appendChild(button)
     td.appendChild(edit_button)
     
@@ -332,7 +151,8 @@ function createAndAppendTableRow(data, parentElementId, quiz_id) {
     const deleteButton = document.createElement("button");
     deleteButton.className = "delete-button";
     deleteButton.onclick = function(){
-        document.getElementById(quiz_id).remove()
+        
+        deleteQuiz(quiz_id)
 
     }
 
@@ -355,6 +175,8 @@ function createAndAppendTableRow(data, parentElementId, quiz_id) {
     } else {
         console.error(`Parent element with ID ${parentElementId} not found.`);
     }
+
+    
 }
 
 async function fetchQuizzes() {
@@ -384,14 +206,82 @@ async function fetchQuizzes() {
   
 }
 
+async function deleteQuiz(quizId){
+    
+    try {
+        const url = `/user/quizzes/delete-quiz/${quizId}`;
+    const options = {
+      method: "DELETE",
+      headers: {
+
+      },
+      
+    };
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    document.getElementById(quizId).remove()
+    updateTableColours();
+    return data;
+    
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
+function updateTableColours(){
+    let quiz_rows = document.querySelectorAll(".quiz-row") 
+    let number = 1
+    
+    for (let quiz_row of quiz_rows) {
+        if (quiz_row.classList.contains("odd")) {
+            quiz_row.classList.remove("odd");
+            if (number % 2 === 0) {
+                quiz_row.classList.add("even");
+            } else {
+                quiz_row.classList.add("odd");
+            }
+            number += 1
+        } else {
+            quiz_row.classList.remove("even");
+            if (number % 2 === 0) {
+                quiz_row.classList.add("even");
+            } else {
+                quiz_row.classList.add("odd");
+            }
+            number += 1
+        }
+    }
+
+}
+
 document.addEventListener("DOMContentLoaded", async function(){
     try {
         const quizzes = await fetchQuizzes();
         const quizData = quizzes.quizzes;
-        console.log(quizzes)
+        
         quizData.forEach(quiz => {
-            console.log(quiz)
-            const rowData = [quiz["quiz_name"], "Mathematics", "Geometry, Algebra", quiz["creation_date"], "89%"];
+            let creation_date_string = quiz["quiz_creation_date"]
+            const original_date = new Date(creation_date_string);
+
+            const dd = String(original_date.getUTCDate()).padStart(2, '0');
+            const mm = String(original_date.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const yy = String(original_date.getUTCFullYear()).slice(2);
+
+            const formattedDate = `${dd}/${mm}/${yy}`;
+            let score = "Not Attempted"
+            if (quiz["score"] == null){
+                 score ="Not Attempted"
+            }else{
+                score = quiz["score"] + "%"
+            }
+
+            const rowData = [quiz["quiz_name"], "Mixed", "Mixed",formattedDate , score];
             createAndAppendTableRow(rowData, "table_body",quiz["quiz_id"]);
         });
 
@@ -411,7 +301,7 @@ document.addEventListener("DOMContentLoaded", async function(){
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: rgb(219, 219, 219) !important;
+  background-color: #FDA29B !important;
   border: none;
   font-weight: 600;
   display: flex;
@@ -436,14 +326,15 @@ document.addEventListener("DOMContentLoaded", async function(){
 .delete-button:hover {
   width: 90px;
   border-radius: 50px;
-  transition-duration: 0.3s;
+  transition: 0.1s;
   background-color: rgb(255, 69, 69) !important;
   align-items: center;
+  filter: brightness(1);
 }
 
 .delete-button:hover .delete-svgIcon {
   width: 20px;
-  transition-duration: 0.3s;
+  transition: 0.3s;
   transform: translateY(60%);
   -webkit-transform: rotate(360deg);
   -moz-transform: rotate(360deg);
