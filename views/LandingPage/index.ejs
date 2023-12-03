@@ -7,20 +7,51 @@
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-MB65CC4F');</script>
-    <!-- End Google Tag Manager -->
+
+    
+    <!-- Google tag (gtag.js) -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WY5PDZBQFT"></script>
+
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-WY5PDZBQFT');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WY5PDZBQFT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <meta name="description" content="Soluprep AI is your go-to platform for AI-powered education, offering resources for A-level and GCSE students. Explore interactive quizzes, personalized insights, and AI-generated exam papers to enhance your learning experience.">
+    <meta name="keywords" content="soluprep, soluprepAI, education, alevel, gcse, AI">
+    <meta name="author" content="Justin Brown">
+    <meta property="og:title" content="SoluPrep AI - Elevate Education, With AI">
+    <meta property="og:description" content="SoluprepAI is your go-to platform for AI-powered education, offering resources for A-level and GCSE students. Explore interactive quizzes, personalized insights, and AI-generated exam papers to enhance your learning experience.">
+    <meta property="og:url" content="https://app.soluprep.co.uk/">
+    <script type="application/ld+json">
 
-  gtag('config', 'G-WY5PDZBQFT');
-</script>
+        {
+          "@context": "https://schema.org/",
+          "@type": "WebSite",
+          "name": "SoluPrep AI",
+          "url": "https://app.soluprep.co.uk/",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://app.soluprep.co.uk/{search_term_string}",
+            "query-input": "required name=search_term_string"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Justin Brown"
+          }
+        }
+    </script>
+
+        
     <%- include('../partials/navbar'); %>
 </head>
+
+
 <body>
     <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MB65CC4F"
@@ -43,7 +74,7 @@
             </div>
 
             <h1>Elevate Education, With AI</h1>
-            <h4 class="textbox">Discover the future of learning with our AIpowered educational tool. Whether you’re a student gearing up for exams or an educator seeking smarter teaching resources, we have you covered.</h4>
+            <h4 class="textbox">Discover the future of learning with our AI powered educational tool. Whether you’re a student gearing up for exams or an educator seeking smarter teaching resources, we have you covered.</h4>
 
             <button class="success" style="width: 300px;" onclick="window.location.href = '/pricing'">Try Now</button>
         </div>
@@ -138,8 +169,7 @@
             position: absolute;
             left: 30px;
             top: 0px;
-            margin: 0;
-            
+            margin: 0; 
         }
     }
 </style>
