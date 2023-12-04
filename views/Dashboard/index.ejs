@@ -19,20 +19,20 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
    <div class="main">
-    <h2 style="border-bottom: solid 1px #eceef1; margin-bottom: 0px; padding-bottom: 2px; margin-top: 2px;">Hey, <%= user.first_name %></h2>
+    <h2 style="border-bottom: solid 1px var(--border); margin-bottom: 0px; padding-bottom: 2px; margin-top: 2px;">Hey, <%= user.first_name %></h2>
 
     <div class="dashboard_usage_grid">
-        <div class="grid-item dashboard_usage_card" style="background: linear-gradient(90deg, #ff7067, #ff5156);">
+        <div class="grid-item dashboard_usage_card" style="background: var(--dashboard_usage_card-1)">
             <h3 class="CurrentMonth">None</h3>
             <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg><%= user.papers_generated %></h1>
             <h2>Exam Papers Made</h2>
         </div>
         
-        <div class="grid-item dashboard_usage_card" style="background: linear-gradient(90deg, #6e96f8, #774bf8);">
+        <div class="grid-item dashboard_usage_card" style="background: var(--dashboard_usage_card-2)">
             <h3 class="CurrentMonth">None</h3>
             <h1><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tool"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg><%= user.questions_generated %></h1>
             <h2>Questions Made</h2>
-        </div><div class="grid-item dashboard_usage_card" style="background: linear-gradient(90deg, #fed36d, #ffb085);">
+        </div><div class="grid-item dashboard_usage_card" style="background: var(--dashboard_usage_card-3)">
             
             <h3 class="CurrentMonth">None</h3>
             <h1><svg xmlns="http:/s/www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg> <%= user.averagescore %>%</h1>
@@ -40,20 +40,20 @@
         </div>
     </div>
 
-    <div style="width: 100%; border-top: solid 1px #eceef1; margin-bottom: 2rem;"></div>
+    <div style="width: 100%; border-top: solid 1px var(--border); margin-bottom: 2rem;"></div>
 
-    <div class="frame progress-frame" style="width: calc(100% - 500px); min-width: 600px; border-radius: 10px; gap: 0px;border: solid 1px #eceef1;">
+    <div class="frame progress-frame" style="width: calc(100% - 500px); min-width: 600px; border-radius: 10px; gap: 0px;border: solid 1px var(--border);">
         <h1 style="margin-left: 2rem; margin-top: 2rem; font-size: 24px;">Progress</h1>
         <h2 style="margin-left: 2rem; margin-bottom: 2rem;">You Have Gained <%= user["this-months-experience"] %> Experience Points This Month</h2>
         <div class="flex">
-        <button id="forward-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></button>
-        <button id="return-button">This Month</button>
-        <button id="back-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+          <button id="forward-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--font-700)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></button>
+          <button id="return-button">This Month</button>
+          <button id="back-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       </div>
         <canvas id="experienceChart" ></canvas>
     </div>
 
-    <div style="width: 100%; border-top: solid 1px #eceef1;"></div>
+    <div style="width: 100%; border-top: solid 1px  var(--border);"></div>
 
    </div>
 </body>
@@ -110,22 +110,26 @@ function getCurrentFormattedDate() {
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-  getCurrentFormattedDate()
+  var style = getComputedStyle(document.body);
+  var chartCol = style.getPropertyValue('--graph-background');
+  var fontCol = style.getPropertyValue('--font-700');
 
   let chart;
-  let scaleOptions;
   let displayedMonth = new Date().getMonth(); // Initialize with the current month
 
+  const fetchData = (url) => fetch(url).then(response => response.json());
+
+  const filterDataByDateRange = (data, startDate, endDate) => {
+    return data.filter(entry => {
+      const entryDate = new Date(entry.month_start);
+      return entryDate >= startDate && entryDate <= endDate;
+    });
+  };
 
   const updateChartWithData = (startDate, endDate) => {
-    fetch('/user/2/monthly-experiences')
-      .then(response => response.json())
+    fetchData('/user/2/monthly-experiences')
       .then(data => {
-        const filteredData = data.filter(entry => {
-          const entryDate = new Date(entry.month_start);
-          return entryDate >= startDate && entryDate <= endDate;
-        });
-
+        const filteredData = filterDataByDateRange(data, startDate, endDate);
         const labels = filteredData.map(entry => new Date(entry.month_start).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }));
         const values = filteredData.map(entry => entry.total_experience);
 
@@ -136,49 +140,20 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(error => console.error('Error:', error));
   };
 
-
-  fetch('/user/2/monthly-experiences')
-    .then(response => response.json())
+  fetchData('/user/2/monthly-experiences')
     .then(data => {
       const today = new Date();
-      const last12MonthsData = data.filter(entry => {
-        const entryDate = new Date(entry.month_start);
-        return entryDate >= new Date(today.getFullYear() - 1, today.getMonth(), 1);
-      });
+      const last12MonthsData = filterDataByDateRange(data, new Date(today.getFullYear() - 1, today.getMonth(), 1), today);
 
       const labels = last12MonthsData.map(entry => new Date(entry.month_start).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }));
       const values = last12MonthsData.map(entry => entry.total_experience);
+
       const totalDuration = 500;
       const delayBetweenPoints = totalDuration / data.length;
       const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
       const animation = {
-      x: {
-          type: 'number',
-          easing: 'linear',
-          duration: delayBetweenPoints,
-          from: NaN, 
-          delay(ctx) {
-          if (ctx.type !== 'data' || ctx.xStarted) {
-              return 0;
-          }
-          ctx.xStarted = true;
-          return ctx.index * delayBetweenPoints;
-          },
-          
-      },
-      y: {
-          type: 'number',
-          easing: 'linear',
-          duration: delayBetweenPoints,
-          from: previousY,
-          delay(ctx) {
-          if (ctx.type !== 'data' || ctx.yStarted) {
-              return 0;
-          }
-          ctx.yStarted = true;
-          return ctx.index * delayBetweenPoints;
-          }
-      }
+        x: { type: 'number', easing: 'linear', duration: delayBetweenPoints, from: NaN, delay(ctx) { return ctx.type !== 'data' || ctx.xStarted ? 0 : (ctx.xStarted = true, ctx.index * delayBetweenPoints); } },
+        y: { type: 'number', easing: 'linear', duration: delayBetweenPoints, from: previousY, delay(ctx) { return ctx.type !== 'data' || ctx.yStarted ? 0 : (ctx.yStarted = true, ctx.index * delayBetweenPoints); } }
       };
 
       const ctx = document.getElementById('experienceChart').getContext('2d');
@@ -188,96 +163,54 @@ document.addEventListener('DOMContentLoaded', function () {
         data: {
           labels: labels,
           datasets: [{
-              label: 'Experience Points',
-              data: values,
-              backgroundColor: "#D6BBFB",
-              borderColor:"#B692F6",
-              color: "#344054",
-              fill: true,
-              pointStyle: 'circle',
-              pointRadius: 7,
+            label: 'Experience Points',
+            data: values,
+            backgroundColor: chartCol,
+            borderColor: "#B692F6",
+            color: fontCol,
+            fill: true,
+            pointStyle: 'circle',
+            pointRadius: 7,
           }],
         },
         options: {
-          layout: {
-              padding: {
-                top:0,
-                left: 10,
-                right: 60,
-                bottom: 10,
-              }
+          layout: { padding: { top: 0, left: 10, right: 60, bottom: 10 } },
+          responsive: true,
+          plugins: { title: { display: false, text: 'Experience Points' }, legend: { display: false } },
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: { display: true, title: { display: true, text: 'Months', type: "months" } },
+            y: { display: true, title: { display: true, text: 'Experience Points' } },
           },
-      responsive: true,
-      plugins: {
-        title: {
-          display: false,
-          text: 'Experience Points'
+          animation: {
+            onComplete: () => delayed = true,
+            delay: (context) => (context.type === 'data' && context.mode === 'default' && !delayed) ? context.dataIndex * 75 + context.datasetIndex * 75 : 0,
+          },
         },
-        legend: {
-                  display:false
-              }
-      },
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
-      scales: {
-        x: {
-          display: true,
-          title: {
-            display: true,
-            text: 'Months',
-            type:"months"
-          }
-        },
-        y: {
-          display: true,
-          title: {
-            display: true,
-            text: 'Experience Points'
-          }
-        },
-      },
-      "animation": {
-        onComplete: () => {
-          delayed = true;
-        },
-        delay: (context) => {
-          let delay = 0;
-          if (context.type === 'data' && context.mode === 'default' && !delayed) {
-            delay = context.dataIndex * 75 + context.datasetIndex * 75;
-          }
-          return delay;
-        },
-      },
-    },
       });
-    
-      document.getElementById('back-button').addEventListener('click', function () {
-    displayedMonth += 1;
-    const today = new Date();
-    const endDate = new Date(today.getFullYear(), displayedMonth, 0);
-    const startDate = new Date(today.getFullYear() - 1, displayedMonth - 1, 1);
-    updateChartWithData(startDate, endDate);
-  });
 
-  document.getElementById('forward-button').addEventListener('click', function () {
-    displayedMonth -= 1;
-    const today = new Date();
-    const endDate = new Date(today.getFullYear(), displayedMonth, 0);
-    const startDate = new Date(today.getFullYear() - 1, displayedMonth - 1, 1);
-    updateChartWithData(startDate, endDate);
-  });
+      const handleButtonClick = (increment) => {
+        displayedMonth += increment;
+        const today = new Date();
+        const endDate = new Date(today.getFullYear(), displayedMonth, 0);
+        const startDate = new Date(today.getFullYear() - 1, displayedMonth - 1, 1);
+        updateChartWithData(startDate, endDate);
+      };
 
-  document.getElementById('return-button').addEventListener('click', function () {
-    displayedMonth = new Date().getMonth();
-    const today = new Date();
-
-    const endDate = new Date()
-    const startDate = new Date(today.getFullYear() - 1, today.getMonth(), 1);
-    updateChartWithData(startDate, endDate);
-  });
+      document.getElementById('back-button').addEventListener('click', () => handleButtonClick(1));
+      document.getElementById('forward-button').addEventListener('click', () => handleButtonClick(-1));
+      document.getElementById('return-button').addEventListener('click', () => {
+        displayedMonth = new Date().getMonth();
+        const today = new Date();
+        const endDate = new Date();
+        const startDate = new Date(today.getFullYear() - 1, today.getMonth(), 1);
+        updateChartWithData(startDate, endDate);
+      });
     })
     .catch(error => console.error('Error:', error));
 });
 </script>
+
+<style>
+ 
+</style>
