@@ -16,6 +16,11 @@ RUN npm install
 
 EXPOSE 3000
 
+# Use a larger timeout value for Git operations
+RUN git config --global http.lowSpeedLimit 0
+RUN git config --global http.lowSpeedTime 999999
+
+
 # Define the entry point for the container
 CMD ["node", "app.js"]
 
