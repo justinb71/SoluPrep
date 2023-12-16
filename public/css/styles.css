@@ -604,11 +604,11 @@ a{
 }
 
 .nav-menu{
-    width: 101vw;
-    height: calc(100vh - 40px);
-    background-color: white;
-    z-index: 10;
-    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--main-background);
+    z-index: 1000;
+    position: fixed;
     left: -1px;
     top: 80px;
     display: flex;
@@ -632,7 +632,7 @@ a{
     text-align: start;
 }
 .nav-menu-links a{
-    color: #101828;
+    color: var(--font-700);
     flex: 1 0 0;
     text-align: start;
     font-family: Inter;
@@ -771,6 +771,7 @@ footer h2{
     padding: 1rem;
     border: 1px solid var(--border);
     margin: 2rem;
+    
 }
 
 .badgeGroup{
@@ -1623,14 +1624,19 @@ td{
         visibility: hidden;
         display: flex;
     }
+    .navbar{
+        position: sticky;
+    }
 
     footer{
         position: absolute;
         left: 0px;
+        
     }
 
     .footer_contiainer{
         width: calc(100% - 100px);
+        
     }
     
 }
@@ -1645,9 +1651,7 @@ td{
 
     .pricingGrid {
         flex: 1 1 calc(50% - 1.5rem);
-        text-align: center;
-
-        
+        text-align: center;        
     }
 
     .subheadingLandingPage{

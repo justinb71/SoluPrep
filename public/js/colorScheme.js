@@ -94,10 +94,22 @@ function darkMode() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const modeSwitch = document.getElementById('modeSwitch');
+    const modeSwitch1 = document.getElementById('modeSwitch1');
+    const modeSwitch2 = document.getElementById('modeSwitch2');
+    darkMode();
 
-    function toggleMode() {
-        if (modeSwitch.checked) {
+    function toggleMode1() {
+        if (modeSwitch1.checked) {
+            darkMode();
+            localStorage.setItem('mode', 'dark');
+        } else {
+            lightMode();
+            localStorage.setItem('mode', 'light');
+        }
+    }
+
+    function toggleMode2() {
+        if (modeSwitch2.checked) {
             darkMode();
             localStorage.setItem('mode', 'dark');
         } else {
@@ -109,13 +121,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Restore mode preference from localStorage
     const savedMode = localStorage.getItem('mode');
     if (savedMode === 'dark') {
-        modeSwitch.checked = true;
+        modeSwitch1.checked = true;
+        modeSwitch2.checked = true;
         darkMode();
     } else {
-        modeSwitch.checked = false;
-        lightMode();
+        modeSwitch1.checked = true;
+        modeSwitch2.checked = true;
+        darkMode();
     }
 
     // Add event listener to toggle mode on checkbox change
-    modeSwitch.addEventListener('change', toggleMode);
+    modeSwitch1.addEventListener('change', toggleMode1);
+    modeSwitch2.addEventListener('change', toggleMode2);
 });
