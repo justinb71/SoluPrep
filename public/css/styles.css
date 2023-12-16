@@ -1551,7 +1551,6 @@ td{
 
 /* Media query for phones */
 @media (max-width: 768px) {
-
     h1{
         
         text-align: center;
@@ -1625,6 +1624,14 @@ td{
         display: flex;
     }
 
+    footer{
+        position: absolute;
+        left: 0px;
+    }
+
+    .footer_contiainer{
+        width: calc(100% - 100px);
+    }
     
 }
 
