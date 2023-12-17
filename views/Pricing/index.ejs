@@ -1,29 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-x: hidden;">
 <head>
     <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MB65CC4F');</script>
+    <script>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MB65CC4F');
+    </script>
     <!-- End Google Tag Manager -->
+    
     <%- include('../partials/navbar'); %>
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MB65CC4F"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MB65CC4F"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
     <!-- End Google Tag Manager (noscript) -->
     <div class="flex" style="flex-direction: column;">
 
-        <div class="frame" style="width: calc(100% - 200px);">
-            <h5 style= "color: var(--primary-700, #6941C6); font-weight: 600; font-size: 14px; text-align: start; margin-bottom: 0;">Pricing</h5>
-            <h2 style="text-align: start; margin: 0;">Simple, transparent pricings</h2>
+        <div class="frame" id="pricingHeadings">
+            <h5 style="color: var(--primary-700, #6941C6); font-weight: 600; font-size: 14px; text-align: start; margin-bottom: 0;">Pricing</h5>
+            <h2 style="text-align: start; margin: 0; width: fit-content;">Simple, transparent pricings</h2>
             <h5 style="text-align: start; margin: 0;">We believe SoluPrep AI should be accessible to everyone</h5>
-
         </div>
 
+        <!-- Basic Plan -->
         <div class="pricingGrid">
             <div class="grid-item card">
                 <h2 style="margin: 1rem;">Free</h2>
@@ -55,9 +60,11 @@
                     <p style="margin: 0;">Quizzes Up To 10 Questions</p>
                 </div>
 
-                <button class="secondary" style="width: calc(100% - 20px); margin-bottom: 20px; margin-top: 80px;">Get Started</button>
+                <button class="secondary purchaseButton" id="price_1OORHDE0TEj3ghXuQsWhJcJN" style="width: calc(100% - 20px); margin-bottom: 20px; margin-top: 80px;">Get Started</button>
                     
             </div>
+
+            <!-- Pro Plan -->
             <div class="grid-item card">
                 <h2 style="margin: 1rem;">£10/mth</h2>
                 <h3 style="margin: 0; text-align: center;">Pro Plan</h3>
@@ -103,9 +110,10 @@
                     <p style="margin: 0;">Solutions Provided</p>
                 </div>
 
-                <button class="secondary" style="width: calc(100% - 20px); margin-bottom: 20px;">Get Started</button>
+                <button class="secondary purchaseButton" id="price_1OONE2E0TEj3ghXu0bSGXKGv"style="width: calc(100% - 20px); margin-bottom: 20px;">Get Started</button>
             </div>
 
+            <!-- Premium Plan -->
             <div class="grid-item card">
                 <h2 style="margin: 1rem;">£25/mth</h2>
                 <h3 style="margin: 0; text-align: center;">Premium Plan</h3>
@@ -151,7 +159,7 @@
                     <p style="margin: 0;">Early Access To New Features</p>
                 </div>
 
-                <button class="secondary" style="width: calc(100% - 20px); margin-bottom: 20px;">Get Started</button>
+                <button class="secondary purchaseButton" id="price_1OONH1E0TEj3ghXuutoqvAAg" style="width: calc(100% - 20px); margin-bottom: 20px;">Get Started</button>
             </div>
         </div>
         <%- include('../partials/footer'); %>
@@ -159,3 +167,46 @@
     
 </body>
 </html>
+
+
+<style>
+    #pricingHeadings{
+        width: calc(100% - 200px);
+    } 
+
+    @media (max-width: 768px) {
+        #pricingHeadings{
+            width: calc(100% - 100px);
+        } 
+    }
+    
+</style>
+
+<script>
+    const purchaseButtons = document.querySelectorAll(".purchaseButton");
+
+    purchaseButtons.forEach(purchaseButton => {
+        purchaseButton.addEventListener("click", () => {
+            const buttonId = purchaseButton.id;
+
+            fetch("/create-checkout-session", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    items: [
+                        { id: buttonId, quantity: 1 }
+                    ]
+                })
+            }).then(res => {
+                if (res.ok) return res.json();
+                return res.json().then(json => Promise.reject(json));
+            }).then(({ url }) => {
+                window.location = url;
+            }).catch(e =>{
+                
+            })
+        });
+    });
+</script>

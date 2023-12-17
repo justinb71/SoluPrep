@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Page</title>
+    <%- include('../../partials/navbar'); %>
+</head>
+<body>
+<main style="display: flex; flex-direction: column; align-items: center;">
+    <div class="frame bordered" style="max-width: 500px;">
+    <h2 style="margin: 0px;" >Payment Successful!</h2>
+    <% if (price.unit_amount_decimal == 0) { %>
+        <h3 style="margin: 0px;">Welcome To Your Free Plan</h3>
+    <% } else if (price.unit_amount_decimal == 1000) { %>
+        <h3 style="margin: 0px;">You've Upgraded to the Pro Plan</h3>
+    <% } else if (price.unit_amount_decimal == 2500) { %>
+        <h3 style="margin: 0px;">You're Now on the Premium Plan</h3>
+    <% } %>
+</div>
+    
+    <h2>Session Details:</h2>
+    <p>Session ID: <%= session.id %></p>
+    <!-- Add more session details as needed -->
+
+    <h2>Price Details:</h2>
+    <p>Price ID: <%= price.id %></p>
+    <p>Amount: <%= price.unit_amount_decimal %></p>
+    <!-- Add more price details as needed -->
+
+    <!-- Add additional content or formatting as desired -->
+</main>
+</body>
+</html>

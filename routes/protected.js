@@ -1,12 +1,16 @@
+require('dotenv').config();
+
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const { Client } = require("pg");
 const User = require('../models/user');
-
-require('dotenv').config();
+const stripe = require("stripe")(process.env.STRIPE_PRVATE_KEY)
 
 router.use(express.json());
+
+
+
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
@@ -17,7 +21,7 @@ const isAuthenticated = (req, res, next) => {
   res.redirect('/login');
 };
 
-router.get('/profile', isAuthenticated, (req, res) => {
+router.get('/user/profile', isAuthenticated, (req, res) => {
 
   res.render('profile', { user: req.user }); 
 });
@@ -35,39 +39,236 @@ router.get('/get-started', isAuthenticated, async (req, res) => {
   
 });
 
-router.get('/dashboard', isAuthenticated, (req, res) => {
-  let user = req.user;
-  
-  getExperienceGainedThisMonth(user.user_id)
-    .then(experienceGained => {
-      user["this-months-experience"] = experienceGained;
-      user["averagescore "] = user["averagescore "] * 100;
-      res.render('Dashboard', { user: user });
+function createPrices() {
+  return stripe.prices.list({ active: true, limit: 10 })
+    .then(prices => {
+      return stripe.products.list({ active: true, limit: 10 })
+        .then(products => {
+          // Create a Map of product information
+          const productInfoMap = new Map(products.data.map(product => [product.id, { name: product.name, description: product.description }]));
+
+          // Filter out prices that do not have associated product information
+          const filteredPrices = prices.data.filter(price => productInfoMap.has(price.product));
+
+          // Create the subscriptions Map with only known products
+          const subscriptions = new Map(
+            filteredPrices.map(price => {
+              const productInfo = productInfoMap.get(price.product);
+
+              return [price.id, {
+                priceId: price.id,
+                name: productInfo.name,
+                description: productInfo.description
+              }];
+            })
+          );
+
+          return subscriptions;
+        });
     })
     .catch(error => {
-      console.error('Error:', error);
-      user["averagescore "] = user["averagescore "] * 100;
-      user["this-months-experience"] = 0;
-      res.render('Dashboard', { user: user });
+      console.error("Error fetching prices:", error.message);
+      throw error;
     });
+}
+const subscriptionsPromise = createPrices();
+
+router.post("/create-checkout-session", async (req, res) => {
+  try {
+    const { items } = req.body;
+
+    let userId;
+    let user;
+    if (req.user && req.user.user_id) {
+      userId = req.user.user_id;
+      user = req.user
+    } else {
+      return res.json({ url: "/register" });
+    }
+    
+
+
+    const subscriptions = await subscriptionsPromise;
+    let id;
+    let customer;
+    try {
+      // Try to retrieve the existing customer
+      customer = await stripe.customers.retrieve(userId);
+
+      // Check if the customer is deleted
+      if (customer.deleted) {
+
+        // If deleted, update the existing customer
+        customer = await stripe.customers.update(userId, {
+        
+        name: user.first_name + " " + user.last_name,
+        email: user.email
+        });
+      }
+
+      
+    } catch (error) {
+
+      // Customer not found, create a new customer
+      try {
+        customer = await stripe.customers.create({
+          id: userId,
+          name: user.first_name + " " + user.last_name,
+          email: user.email
+          // Add other customer properties as needed
+        });
+      } catch (createError) {
+        // Handle the case where the customer creation fails
+        console.error("Error creating customer:", createError.message);
+        // You might want to send an appropriate response to the client
+        return res.status(500).json({ error: "Error creating customer" });
+      }
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: determineCheckoutMode(items, subscriptions),
+      customer: customer.id,
+      line_items: items.map(item => {
+        const subscription = subscriptions.get(item.id);
+        id = item.id
+        return {
+          price: subscription.priceId,
+          quantity: item.quantity || 1,
+        };
+      }),
+      success_url: `${process.env.SERVER_URL}/pricing/success?session_id={CHECKOUT_SESSION_ID}&subscription_id=${id}`, // Use {CHECKOUT_SESSION_ID} directly
+      cancel_url: `${process.env.SERVER_URL}/pricing`,
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    
+    res.status(500).json({ err: error.message });
+  }
 });
 
-router.get('/user/profile', isAuthenticated, (req, res) => {
-  let user = req.user;
+
+
+
+function determineCheckoutMode(items, subscriptions) {
+  // Check if any item corresponds to a free subscription
+  const isFreeSubscription = items.some(item => {
+    const subscription = subscriptions.get(item.id);
+    return subscription && subscription.priceId === "price_1OORHDE0TEj3ghXuQsWhJcJN";
+  });
+
+  // Determine the mode based on whether there is a free subscription
+  return isFreeSubscription ? "payment" : "subscription";
+}
+
+router.get('/pricing/success', async (req, res) => {
+  try {
+    // Get the session ID and price ID from the query parameters
+    const { session_id, subscription_id } = req.query;
+    
+
+    // Retrieve the session to get more information if needed
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+
+    // Retrieve the price to get more information if needed
+    const prices = await stripe.prices.retrieve(subscription_id);
+    const price = await stripe.prices.retrieve(subscription_id);
+
+    // Now you can use the session and price objects as needed in your success page logic
+
+    const customer = await stripe.customers.retrieve(session.customer);
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+    });
   
-  getExperienceGainedThisMonth(user.user_id)
+    let plan = subscriptions.data[0].plan;
+    const userId = customer.id
+
+    if (plan.active = true){
+      let subscriptionLevel = 1
+      if(plan.id == "price_1OONE2E0TEj3ghXu0bSGXKGv"){ subscriptionLevel = 2 }
+      else if(plan.id == "price_1OONH1E0TEj3ghXuutoqvAAg"){subscriptionLevel = 3 };
+
+      const client = new Client(process.env.DATABASE_URL);
+      try {
+        await client.connect();
+    
+        const query = 'UPDATE public.users SET subscription_level = $1 WHERE user_id = $2 RETURNING *';
+        const result = await client.query(query, [subscriptionLevel, userId]);
+    
+        if (result.rowCount === 0) {
+          console.log(`No user found with user_id: ${userId}`);
+          return null; // or throw an error if you want to handle this case differently
+        }
+    
+        const updatedUser = result.rows[0];
+        console.log('User updated:', updatedUser);
+        res.render('Pricing/Success', { session, price, customer });
+        return updatedUser;
+      } catch (err) {
+        console.error('Error updating user:', err);
+        throw err; // handle the error appropriately
+      } finally {
+        await client.end();
+      }
+    
+    }
+
+    
+  } catch (error) {
+    // Handle errors
+    console.error('Error retrieving data:', error);
+
+    // Send a meaningful error response to the client
+    res.status(500).send(`Error retrieving data: ${error.message || 'Unknown error'}`);
+  }
+});
+
+
+router.get('/dashboard', isAuthenticated, async (req, res) => {
+  let user = req.user;
+  const customer = await stripe.customers.retrieve(user.user_id);
+  const subscriptions = await stripe.subscriptions.list({
+    customer: customer.id,
+  });
+  let plan = subscriptions.data[0].plan;
+
+  if (plan.active = true){
+    getExperienceGainedThisMonth(user.user_id)
     .then(experienceGained => {
       user["this-months-experience"] = experienceGained;
       user["averagescore "] = user["averagescore "] * 100;
-      res.render('Profile', { user: user });
+      res.render('Dashboard', { user: user });
     })
     .catch(error => {
       console.error('Error:', error);
       user["averagescore "] = user["averagescore "] * 100;
       user["this-months-experience"] = 0;
-      res.render('Profile', { user: user });
+      res.render('Dashboard', { user: user });
     });
+  }else{
+    getExperienceGainedThisMonth(user.user_id)
+    .then(experienceGained => {
+      user["this-months-experience"] = experienceGained;
+      user["averagescore "] = user["averagescore "] * 100;
+      res.render('Dashboard', { user: user });
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      user["averagescore "] = user["averagescore "] * 100;
+      user["this-months-experience"] = 0;
+      res.render('Dashboard', { user: user });
+    });
+  }
+
+  
+  
 });
+
+
+
+
 
 
 router.get('/user/quizzes', isAuthenticated, (req, res) => {

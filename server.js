@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -7,6 +8,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.use(express.static('css'));
 app.use(express.static('js'));
+app.use(express.json());
+
+
 
 
 app.get('/', (req, res) => {
@@ -33,6 +37,7 @@ app.get('/login', (req, res) => {
   res.render('\Login');
 });
 
+
 app.get('/dashboard/Exam%20Paper%20Generator', (req, res) => {
     res.render('\Exam Paper Generator');
   });
@@ -43,6 +48,7 @@ app.get('/dashboard/Exam%20Paper%20Generator', (req, res) => {
 app.get('/dashboard/Ai%20Question%20Generator', (req, res) => {
 res.render('\AI Question Generator');
 });
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

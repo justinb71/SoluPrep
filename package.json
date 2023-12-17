@@ -1,10 +1,11 @@
 {
-  "name": "soluprep",
+  "name": "SoluPrep AI",
   "version": "1.0.0",
-  "description": "Exam Builder",
+  "description": "SoluPrep AI",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "devStart": "nodemon app.js"
   },
   "author": "Justin brown",
   "license": "ISC",
@@ -20,6 +21,10 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "pg": "^8.11.2"
+    "pg": "^8.11.2",
+    "stripe": "^14.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }

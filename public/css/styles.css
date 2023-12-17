@@ -1552,7 +1552,6 @@ td{
 
     h2,
     h3{
-        width: 100vw;
         overflow-wrap: normal; 
     }
 
@@ -1602,10 +1601,7 @@ td{
         position: sticky;
     }
 
-    footer{
-        position: absolute;
-        left: 0px;
-    }
+    
 
     .footer_contiainer{
         width: calc(100% - 100px);
