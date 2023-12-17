@@ -228,39 +228,55 @@ router.get('/pricing/success', async (req, res) => {
 
 router.get('/dashboard', isAuthenticated, async (req, res) => {
   let user = req.user;
-  const customer = await stripe.customers.retrieve(user.user_id);
-  const subscriptions = await stripe.subscriptions.list({
-    customer: customer.id,
-  });
-  let plan = subscriptions.data[0].plan;
-
-  if (plan.active = true){
-    getExperienceGainedThisMonth(user.user_id)
-    .then(experienceGained => {
-      user["this-months-experience"] = experienceGained;
-      user["averagescore "] = user["averagescore "] * 100;
-      res.render('Dashboard', { user: user });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      user["averagescore "] = user["averagescore "] * 100;
-      user["this-months-experience"] = 0;
-      res.render('Dashboard', { user: user });
+  try{
+    const customer = await stripe.customers.retrieve(user.user_id);
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
     });
-  }else{
+    let plan = subscriptions.data[0].plan;
+  
+    if (plan.active = true){
+      getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+    }else{
+      getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+    }
+  }catch(e){
     getExperienceGainedThisMonth(user.user_id)
-    .then(experienceGained => {
-      user["this-months-experience"] = experienceGained;
-      user["averagescore "] = user["averagescore "] * 100;
-      res.render('Dashboard', { user: user });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      user["averagescore "] = user["averagescore "] * 100;
-      user["this-months-experience"] = 0;
-      res.render('Dashboard', { user: user });
-    });
-  }
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+  };
+  
 
   
   
