@@ -1,17 +1,20 @@
 function hamburgerButton() {
-    let checkbox = document.getElementById("check");
-    let sidepanel = document.querySelector(".sidePanel");
-    let main = document.querySelector("main");
+  const root = document.documentElement;
+  pos_width = root.style.getPropertyValue("--side-panel-open-wdith");
 
-    if (checkbox.checked) {
+  let checkbox = document.getElementById("check");
+  let sidepanel = document.querySelector(".sidePanel");
+  let main = document.querySelector("main");
+
+  if (checkbox.checked) {
+    
+      sidepanel.style = "transition:.3s; left:-300px;"
+      main.style = "transition:.3s; width:100%; left:0px;"
+  }else{
+      sidepanel.style = " transition:.3s ;left:0px;"
+      main.style = " transition:.3s; width: calc(100% - 300px); left:300px;"
       
-        sidepanel.style = "transition:.3s; left:-300px;"
-        main.style = "transition:.3s; width:100%; left:0px;"
-    }else{
-        sidepanel.style = " transition:.3s ;left:0px;"
-        main.style = " transition:.3s; width: calc(100% - 300px); left:300px;"
-        
-    }
+  }
 }
 
 

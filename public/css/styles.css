@@ -117,6 +117,8 @@
     --success-100: #D1FADF;
     --primary-color: #3498db;
     --primary-dark-color: #02020280;
+
+    --side-panel-open-wdith: 300px;
 }
 
 
@@ -219,7 +221,8 @@ input[type="password"] {
 
 input[type="password"] {
     padding-right: 30px;
-    width: 313px;
+    max-width: 313px;
+    
 }
 
 textarea{
@@ -610,7 +613,7 @@ a{
     z-index: 1000;
     position: fixed;
     left: -1px;
-    top: 80px;
+    top: 90px;
     display: flex;
     gap: 1rem;
     flex-direction: column;
@@ -680,6 +683,7 @@ footer{
     gap: 1rem;
     background: var(--primary-800);
     height:fit-content;
+    z-index: 1;
 }
 
 .footer_contiainer{
@@ -1311,24 +1315,7 @@ td{
     background-color: rgba(240, 240, 240, 0.658);
 }
 
-@media (min-width: 1200px) {
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        grid-auto-flow: columns;
-    }
 
-    .pricingGrid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        grid-auto-flow: columns; 
-    }
-    .subheadingLandingPage{
-        width: 768px;
-    }
-  }
 
 .quiz-quiz-header{
     border-bottom: 1px solid var(--gray-200);
@@ -1553,7 +1540,6 @@ td{
 /* Media query for phones */
 @media (max-width: 768px) {
     h1{
-        
         text-align: center;
         font-family: Inter;
         overflow-wrap: normal;
@@ -1564,21 +1550,14 @@ td{
         letter-spacing: -0.72px;
     }
 
-    h2{
-        width: 100vw;
-        overflow-wrap: normal; 
-    }
-
+    h2,
     h3{
         width: 100vw;
         overflow-wrap: normal; 
     }
+
     .subheadingLandingPage{
         width: 100%;
-    }
-
-    .profile_button{
-        display: none;
     }
     
     .textbox{
@@ -1586,35 +1565,30 @@ td{
         padding-left: 10px;
         padding-right: 10px;
     }
+
     .floating{
         width: calc(100% - 36px);
-        border-radius: 0px;
         margin-top: 0;
         margin-left: 0;
     }
-    .pricingGrid {
-        display: grid;
-        grid-template-rows: repeat(3, 1fr);
-        grid-auto-flow: row;
-            
-        }
-    
-    .logo{
-        font-size: 20px;
-    }
-    .nav-buttons{
-        display: none;
-    }
-    .nav-links{
-        display: none;
-    }
-    
+
+    .pricingGrid,
     .grid {
         display: grid;
         grid-template-rows: repeat(3, 1fr);
-        grid-auto-flow: row;
-        
+        grid-auto-flow: row; 
     }
+
+    .logo{
+        font-size: 20px;
+    }
+
+    .profile_button,
+    .nav-buttons,
+    .nav-links{
+        display: none;
+    }
+   
     .nav-menu-button{
         visibility: visible;
         display: unset;
@@ -1631,16 +1605,12 @@ td{
     footer{
         position: absolute;
         left: 0px;
-        
     }
 
     .footer_contiainer{
         width: calc(100% - 100px);
-        
     }
-    
 }
-
 
 @media (max-width: 1080px) {
     .grid {
@@ -1657,5 +1627,23 @@ td{
     .subheadingLandingPage{
         width: 768px;
     }
+}
 
+@media (min-width: 1200px) {
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        grid-auto-flow: columns;
+    }
+
+    .pricingGrid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        grid-auto-flow: columns; 
+    }
+    .subheadingLandingPage{
+        width: 768px;
+    }
 }

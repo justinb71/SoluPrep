@@ -1,6 +1,6 @@
 function lightMode() {
     const root = document.documentElement;
-
+    
     root.style.setProperty('--gray-25', '#FCFCFD');
     root.style.setProperty('--gray-200', '#EAECF0');
     root.style.setProperty('--gray-300', '#D0D5DD');
@@ -94,43 +94,35 @@ function darkMode() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const modeSwitch1 = document.getElementById('modeSwitch1');
-    const modeSwitch2 = document.getElementById('modeSwitch2');
-    darkMode();
+    const modeSwitches = ['modeSwitch', 'modeSwitch1', 'modeSwitch2'].map(id => document.getElementById(id)).filter(Boolean);
 
-    function toggleMode1() {
-        if (modeSwitch1.checked) {
+    function toggleMode(switchElement) {
+        const mode = switchElement.checked ? 'dark' : 'light';
+        setMode(switchElement, mode);
+    }
+
+    function setMode(switchElement, mode) {
+        switchElement.checked = (mode === 'dark');
+
+        if (mode === 'dark') {
             darkMode();
-            localStorage.setItem('mode', 'dark');
         } else {
             lightMode();
-            localStorage.setItem('mode', 'light');
         }
+
+        localStorage.setItem(switchElement.id, mode);
     }
 
-    function toggleMode2() {
-        if (modeSwitch2.checked) {
-            darkMode();
-            localStorage.setItem('mode', 'dark');
-        } else {
-            lightMode();
-            localStorage.setItem('mode', 'light');
-        }
-    }
+    // Restore mode preference from localStorage for each switch
+    modeSwitches.forEach(switchElement => {
+        const savedMode = localStorage.getItem(switchElement.id);
+        setMode(switchElement, savedMode || 'dark');
+    });
 
-    // Restore mode preference from localStorage
-    const savedMode = localStorage.getItem('mode');
-    if (savedMode === 'dark') {
-        modeSwitch1.checked = true;
-        modeSwitch2.checked = true;
-        darkMode();
-    } else {
-        modeSwitch1.checked = true;
-        modeSwitch2.checked = true;
-        darkMode();
-    }
-
-    // Add event listener to toggle mode on checkbox change
-    modeSwitch1.addEventListener('change', toggleMode1);
-    modeSwitch2.addEventListener('change', toggleMode2);
+    // Add event listener to toggle mode on any switch change
+    modeSwitches.forEach(switchElement => {
+        switchElement.addEventListener('change', () => toggleMode(switchElement));
+    });
 });
+
+

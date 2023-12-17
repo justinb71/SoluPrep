@@ -79,29 +79,50 @@
 
 
 <script>
+    // Variable to track whether the menu is open or closed
     let menuOpen = false;
 
-    function menuToggle(){
+    // Function to toggle the menu
+    function menuToggle() {
+        // Selecting necessary elements
         const menuButton = document.querySelector(".nav-menu-button");
         const menu = document.querySelector(".nav-menu");
-        if (menuOpen){
-            menuButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> <path d="M3 12H21M3 6H21M3 18H21" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>'
-            menu.style.visibility = "hidden"
-            window.scrollTo(0, 0);
-            document.body.style.overflow = 'scroll';
+        const navBar = document.querySelector(".navbar");
+        const elementsToToggle = document.querySelectorAll(":not(nav):not(nav *)");
+        const body = document.body;
+
+        if (menuOpen) {
+            // Closing the menu
+            menuButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> <path d="M3 12H21M3 6H21M3 18H21" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>';
+
+            // Restoring scroll position and visibility of elements
+
+            body.style.overflow = 'scroll';
+            elementsToToggle.forEach(element => {
+                element.style.visibility = "visible";
+            });
+
+            // Hiding the menu
+            menu.style.visibility = "hidden";
             menuOpen = false;
-        }else{
-            menuButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> <path d="M18 6L6 18M6 6L18 18" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>'
-            menu.style.visibility = "visible"
-            window.scrollTo(document.END)
-            document.body.style.overflow = 'hidden';
+        } else {
+            // Opening the menu
+            menuButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> <path d="M18 6L6 18M6 6L18 18" stroke="#667085" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </svg>';
+            menu.style.visibility = "visible";
+            navBar.style.visibility = "visible";
+
+            // Disabling scrolling and hiding other elements
+            body.style.overflow = 'hidden';
+            elementsToToggle.forEach(element => {
+                element.style.visibility = "hidden";
+            });
+
             menuOpen = true;
         }
-
     }
-
-
 </script>
+
+
 
 <style>
     /* switch settings 👇 */
