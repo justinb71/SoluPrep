@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-MB65CC4F');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Include MathJax -->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          jax: ["input/TeX", "output/HTML-CSS"],
+          extensions: ["tex2jax.js"],
+          "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] },
+          tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], displayMath: [ ["$$","$$"], ["\\[", "\\]"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno" },
+          TeX: { noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } } },
+          messageStyle: "none"
+        });
+        </script>    
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+    
+    <!-- End MathJax -->
+
+    <%- include('../../partials/profileNavbar'); %>
+</head>
+
+<body>
+    
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MB65CC4F"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div class="main">
+        <div class="line-wobble-frame">
+            <div class="line-wobble"></div>
+            <h2 style="position: relative; top:calc(50% - 100px)">Loading</h2>
+        </div>
+        
+        
+        <div class="quiz-quiz-header" style="display: flex;">
+            <div style="width: 50%;">
+                <h1 id="quizName">None</h1>
+
+                <h3 style="margin-top: 1rem; margin-left:2rem;" id="quizTopics">None</h3>
+            
+            </div>
+            
+            <div class="quiz-quiz-marked-data" style="width: 50%; display: flex; flex-direction: column; justify-content: center;" >
+                <span style="border: #c92828 4px solid; width: 140px; height: 140px; border-radius: 100%; position: absolute; left: calc(50% + 186px); top: 2px;" id="markIndicator"></span>
+                
+                <h2 style="text-align: center; margin-left:4rem;  font-size: 36px; font-weight: 600;" id="marksGrade" >U</h2>
+                <h2 style="text-align: center; margin-left:4rem; margin-top: 0px ;" id="marksPercentage" >1%</h2>
+                <h3 style="text-align: center;" >You scored <br><span id="marksText"></span></h3>
+            
+            </div>
+        </div>
+        <div class="quiz-quiz-questions-frame">
+            <div class="background-blur"></div>
+
+            <div class="mark-scheme">
+                
+                    <div class="mark-scheme-frame bordered">
+                        <button class="exit-button" onclick="hideMarkScheme()">X</button>
+                        <h1 style="margin-top: 0;">Mark Scheme</h1>
+                        
+                        <div style="border-bottom: 1px solid var(--border)"></div>
+
+                        <h3 id="mark-scheme-question" style="padding: 0px 0.5rem 0px 0.5rem;">N/A</h3>
+
+                        <h3>Your Answer</h3>
+                        <h3 style="background-color: var(--gray-25); width: calc(100% - 30px - 4rem); margin: 0px 3rem 1.5rem; border-radius: 7px; text-align: start; padding: 0.5rem; font-size: 15px; line-height: 1.5rem; overflow-wrap: break-word; max-height: 100px; overflow-y: scroll;" id="mark-scheme-user-answer">N/A</h3>
+                        
+                        <h3>Correct Answer</h3>
+                        <h3 style="background-color: var(--gray-25); width: calc(100% - 30px - 4rem); margin: 0px 3rem 1.5rem; border-radius: 7px; text-align: start; padding: 0.5rem; font-size: 15px; line-height: 1.5rem; overflow-wrap: break-word; max-height: 100px; overflow-y: scroll;"  id="mark-scheme-correct-answer">N/A</h3>
+                        
+
+                        <div style="border-bottom: 1px solid var(--border)"></div>
+                        <h3>Worked Answer</h3>
+                        <h3 style="background-color: var(--gray-25); width: calc(100% - 30px - 4rem); margin: 0px 3rem 1.5rem; border-radius: 7px; text-align: start; padding: 0.5rem; font-size: 15px; line-height: 1.5rem; overflow-wrap: break-word; max-height: 200px; overflow-y: scroll;"  id="mark-scheme-worked-solution">N/A</h3>
+                    </div>
+                    
+                    
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+    .line-wobble-frame{
+        width: calc(100% - 315px);
+        
+        height: 0vh;
+        background: var(--gray-25, #FCFCFD);
+        z-index: 4;
+        position: fixed;
+        left:312px;
+        top:0px
+    }
+    .line-wobble {
+ --uib-size: 80px;
+ --uib-speed: 1.55s;
+ --uib-color: black;
+ --uib-line-weight: 5px;
+ position: relative;
+ width: 50%;
+ left:25%;
+ top:50%;
+ height: 100%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ height: var(--uib-line-weight);
+
+ border-radius: calc(var(--uib-line-weight) / 2);
+ overflow: hidden;
+ transform: translate3d(0, 0, 0);
+}
+
+.line-wobble::before {
+ content: '';
+ position: absolute;
+ top: 0;
+ left: 0;
+ height: 100%;
+ width: 100%;
+ background-color: var(--uib-color);
+ opacity: 0.1;
+}
+
+.line-wobble::after {
+ content: '';
+ height: 100%;
+ width: 100%;
+ border-radius: calc(var(--uib-line-weight) / 2);
+ animation: wobble var(--uib-speed) ease-in-out infinite;
+ transform: translateX(-90%);
+ background-color: var(--uib-color);
+}
+
+@keyframes wobble {
+ 0%,
+  100% {
+  transform: translateX(-90%);
+ }
+
+ 50% {
+  transform: translateX(90%);
+ }
+}
+
+</style>
+
+<script>
+
+function hideMarkScheme() {
+    document.querySelector(".mark-scheme").style.visibility = "hidden";
+    document.querySelector(".background-blur").style.visibility = "hidden";
+}
+
+function markScheme(question, usersAnswer, correctAnswer, solution){
+    document.querySelector("#mark-scheme-question").innerHTML = question;
+    document.querySelector("#mark-scheme-user-answer").innerHTML = usersAnswer;
+    document.querySelector("#mark-scheme-correct-answer").innerHTML = correctAnswer;
+    document.querySelector("#mark-scheme-worked-solution").innerHTML = solution;
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.querySelector('.mark-scheme')]);
+
+    document.querySelector(".mark-scheme").style.visibility = "visible";
+    document.querySelector(".background-blur").style.visibility = "visible";
+
+}
+
+function determineGradeAndColor(percentage) {
+    if (percentage < 0 || percentage > 100) {
+        return { grade: 'Invalid Percentage', color: '#FF0000' }; // Red for invalid
+    } else if (percentage >= 90) {
+        return { grade: 'A*', color: '#FFD700' }; // Gold
+    } else if (percentage >= 80) {
+        return { grade: 'A', color: '#4CAF50' }; // Green
+    } else if (percentage >= 70) {
+        return { grade: 'B', color: '#1E90FF' }; // Dodger Blue
+    } else if (percentage >= 60) {
+        return { grade: 'C', color: '#FFA500' }; // Orange
+    } else if (percentage >= 50) {
+        return { grade: 'D', color: '#FFEB3B' }; // Yellow
+    } else if (percentage >= 40) {
+        return { grade: 'E', color: '#FFC0CB' }; // Pink
+    } else {
+        return { grade: 'U', color: '#FF0000' }; // Red for Ungraded or Fail
+    }
+}
+class createQuestion{
+
+    constructor(){
+        this.questionData = [];
+    }
+
+    generateUniqueId() {
+        let id;
+        do {
+            id = Math.random().toString(36).substr(2, 9);
+        } while (this.questionData.some(data => data[0] === id));
+        return id;
+    }
+    
+    
+    createMultipleChoiceQuestion(questionText, options,questionId){
+        
+        this.questionData.push([questionId, 'Multiple Choice']);;
+
+        const questionFrame = document.createElement('div');
+        questionFrame.classList.add('quiz-quiz-question-frame');
+        questionFrame.classList.add('multi');
+        questionFrame.id = questionId;
+
+        const questionTitle = document.createElement('h1');
+        questionTitle.textContent = questionText;
+
+        questionFrame.appendChild(questionTitle);
+
+        const markText = document.createElement("h2");
+        markText.innerHTML = '[1]';
+        markText.classList.add("quiz-mark-text")
+        questionFrame.appendChild(markText);
+
+        const questionSubtitle = document.createElement('h2');
+        questionSubtitle.textContent = "Select An Answer";
+        questionFrame.appendChild(questionSubtitle);
+
+        const questionTypeChip = document.createElement('span');
+        questionTypeChip.classList.add('quiz-quiz-question-type-chip');
+        questionTypeChip.style.backgroundColor = '#2E90FA';
+        questionTypeChip.textContent = 'Multiple Choice';
+        questionFrame.appendChild(questionTypeChip);
+
+        const infoButton = document.createElement('button');
+        infoButton.classList.add('info-button');
+        infoButton.innerHTML = 'i';
+        questionFrame.appendChild(infoButton);
+
+        
+
+        
+        
+
+        const optionsContainer = document.createElement('div');
+        optionsContainer.classList.add('quiz-quiz-question-radio-container');
+        
+        options.forEach((optionText, index) => {
+            
+            const optionWrapper = document.createElement('div');
+            optionWrapper.classList.add('quiz-quiz-question-radio-wrapper');
+
+            const label = document.createElement('label');
+            label.classList.add('quiz-quiz-question-radio-button');
+            label.htmlFor = `option${index + 1}-${questionId}`;
+
+            const input = document.createElement('input');
+            input.id = `option${index + 1}-${questionId}`;
+            input.name = 'radio-group' + questionId;
+            input.type = 'radio';
+
+            const checkmark = document.createElement('span');
+            checkmark.classList.add('quiz-quiz-question-radio-checkmark');
+
+            const optionLabel = document.createElement('span');
+            optionLabel.classList.add('quiz-quiz-question-radio-label');
+            optionLabel.textContent = `${String.fromCharCode(65 + index)}. ${optionText}`;
+
+            label.appendChild(input);
+            label.appendChild(checkmark);
+            label.appendChild(optionLabel);
+            optionWrapper.appendChild(label);
+            optionsContainer.appendChild(optionWrapper);
+        });
+
+        questionFrame.appendChild(optionsContainer);
+        document.querySelector('.quiz-quiz-questions-frame').appendChild(questionFrame);
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.querySelector('.quiz-quiz-questions-frame')]);
+        
+    };
+
+    createShortAnswerQuestion(questionText, marks, answerText, correctAnswer, solution) {
+        
+        const questionId = this.generateUniqueId();
+        this.questionData.push([questionId, 'Short Answer']);
+
+        const questionFrame = document.createElement('div');
+        questionFrame.classList.add('quiz-quiz-question-frame');
+        questionFrame.classList.add('latex');
+        questionFrame.id = questionId;
+
+        const questionTypeChip = document.createElement('span');
+        questionTypeChip.classList.add('quiz-quiz-question-type-chip');
+        questionTypeChip.style.backgroundColor = '#6172F3';
+        questionTypeChip.textContent = 'Short Answer';
+        questionFrame.appendChild(questionTypeChip);
+
+        const infoButton = document.createElement('button');
+        infoButton.classList.add('info-button');
+        infoButton.innerHTML = 'i';
+        questionFrame.appendChild(infoButton);
+
+        infoButton.onclick = function(){
+            markScheme(questionText, answerText,correctAnswer,solution);
+            
+        }
+
+        const questionTitle = document.createElement('h1');
+        
+        questionTitle.innerHTML = questionText; 
+        questionFrame.appendChild(questionTitle);
+
+        const markText = document.createElement("h2");
+        markText.innerHTML = '[' + marks + ']';
+        markText.classList.add("quiz-mark-text")
+        questionFrame.appendChild(markText);
+
+        const answer = document.createElement('h3');
+        answer.classList.add("Quiz-Answer");
+        answer.innerHTML = answerText
+        
+        answer.style = "background-color: var(--gray-25); width: calc(100% - 30px - 4rem); margin:0 3rem 1.5rem  3rem; border-radius:7px; text-align:start; padding: 0.5rem; font-size: 15px; line-height: 1.5rem"
+        
+        
+        questionFrame.appendChild(answer);
+
+        document.querySelector('.quiz-quiz-questions-frame').appendChild(questionFrame);
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.querySelector('.quiz-quiz-questions-frame')]);
+        
+    };
+
+    createLongAnswerQuestion(questionText, marks, answerText, correctAnswer, solution) {
+        const questionId = this.generateUniqueId();
+        this.questionData.push([questionId, 'Long Answer']);
+
+        const questionFrame = document.createElement('div');
+        questionFrame.classList.add('quiz-quiz-question-frame');
+        questionFrame.id = questionId;
+
+        const questionTypeChip = document.createElement('span');
+        questionTypeChip.classList.add('quiz-quiz-question-type-chip');
+        questionTypeChip.style.backgroundColor = '#F63D68';
+        questionTypeChip.textContent = 'Long Answer';
+        questionFrame.appendChild(questionTypeChip);
+
+        const infoButton = document.createElement('button');
+        infoButton.classList.add('info-button');
+        infoButton.innerHTML = 'i';
+        questionFrame.appendChild(infoButton);
+
+        infoButton.onclick = function(){
+            markScheme(questionText, answerText,correctAnswer,solution);
+            
+        }
+
+        const questionTitle = document.createElement('h1');
+        questionTitle.textContent = questionText;
+        questionFrame.appendChild(questionTitle);
+
+        const markText = document.createElement("h2");
+        markText.innerHTML = '[' + marks + ']';
+        markText.classList.add("quiz-mark-text")
+        questionFrame.appendChild(markText);
+
+        const answer = document.createElement('h3');
+        answer.classList.add("Quiz-Answer");
+        answer.innerHTML = answerText
+        
+        answer.style = "background-color: var(--gray-25); width: calc(100% - 30px - 4rem); margin:0 3rem 1.5rem  3rem; border-radius:7px; text-align:start; padding: 0.5rem; font-size: 15px; line-height: 1.5rem"
+        
+        
+        questionFrame.appendChild(answer);
+
+        document.querySelector('.quiz-quiz-questions-frame').appendChild(questionFrame);
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.querySelector('.quiz-quiz-questions-frame')]);
+    }
+}
+
+
+function findArrayWithElement(array2D, element) {
+    for (let i = 0; i < array2D.length; i++) {
+        for (let j = 0; j < array2D[i].length; j++) {
+            if (array2D[i][j] === element) {
+                return array2D[i];
+            }
+        }
+    }
+    // If no array with the element is found, you can return null or handle it as needed
+    return null;
+}
+
+async function fetchQuestions(quizID) {
+  try {
+    const url = `/user/quizzes/get-questions?quizID=${quizID}`;
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any other headers if needed
+      },
+    };
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+    let instance = new createQuestion();
+    // Define a sleep function
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function fadeLoop() {
+        for (let i = 1; i > -1; i-=0.01) {
+            await sleep(5);
+            document.querySelector(".line-wobble-frame").style.opacity = i
+        }
+        document.querySelector(".line-wobble-frame").style.visibility = "hidden"
+    }
+
+    quizID = sessionStorage.getItem("quizID");
+    quizID = quizID.toString();
+
+    let totalMarks = 0;
+    let marksGained = 0;
+
+    fetchQuestions(quizID)
+    .then(result=>{
+
+        questions = result.generatedQuestions;
+        quizName = result.quizName[0].quiz_name;
+        markedQuestions = JSON.parse(sessionStorage.getItem("MarkedQuestions"))["questions"];
+        console.log(markedQuestions)
+        
+        
+        
+        questionIds = []
+        topics = []
+
+        quizID = sessionStorage.getItem("quizID");
+
+        document.querySelector("#quizName").textContent = "Quiz: " + quizName
+    
+      let questionNumber = 1
+    Object.keys(questions).forEach(key => {
+        markedQuestion = findArrayWithElement(markedQuestions,questions[key]["question_id"])
+
+        
+    
+    
+       const question = questions[key]["question_data"];
+       
+       try{
+       
+        questionIds.push(questions[key]["question_id"])
+        topics.push(question["TOPIC"])
+        if (markedQuestion){
+            
+            totalMarks = totalMarks + parseInt(question["MARKS"]);
+            marksGained = marksGained + parseInt(markedQuestion[5]);
+
+            if (question["TYPE"] == "Short Answer"){
+
+            instance.createShortAnswerQuestion(questionNumber + ". " + markedQuestion[0], markedQuestion[5] + "/" + markedQuestion[2], markedQuestion[4], markedQuestion[1], question["SOLUTION"]);
+
+            } else if (question["TYPE"] == "Long Answer"){
+            instance.createLongAnswerQuestion(questionNumber + ". " + markedQuestion[0],markedQuestion[5] + "/" + markedQuestion[2], markedQuestion[4], markedQuestion[1], question["SOLUTION"]);
+            }
+        }else{
+            if (question["TYPE"] == "Multiple Choice"){
+                text = questionNumber + ". " + question["QUESTION"]
+                options =  question["OPTIONS"]
+
+                instance.createMultipleChoiceQuestion(text, options, questions[key]["question_id"]);
+            }
+        }
+        questionNumber ++;
+      }
+      catch{
+        
+      }
+        
+      fadeLoop()
+    
+
+
+      
+   });
+   
+    document.querySelector("#marksText").innerHTML = marksGained + "/" + totalMarks
+    document.querySelector("#marksPercentage").innerHTML = Math.round(marksGained / totalMarks * 100) + "%"
+    document.querySelector("#marksGrade").innerHTML = determineGradeAndColor( Math.round(marksGained / totalMarks * 100)).grade
+    document.querySelector("#markIndicator").style.borderColor = determineGradeAndColor( Math.round(marksGained / totalMarks * 100)).color
+    document.querySelector("#quizTopics").textContent = "Topics: " +  topics
+
+    })
+
+    
+
+    
+    
+
+
+});
+</script>
+
+
+<style>
+.heading-border{
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    width: fit-content;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+
+}
+.info-button {
+  background-color: transparent;
+  color: var(--font-700);
+  font-size: 18px;
+  font-family: "Arial", sans-serif;
+  position: absolute;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  border: 1px var(--gray-900) solid;
+  margin: 0.5rem;
+  border-radius: 50%;
+  text-align: center;
+  padding: 0; 
+  
+}
+
+.info-button:hover {
+
+  color: #2E90FA;
+}
+
+.mark-scheme{
+    
+    position: fixed;
+    z-index: 2;
+    width: 700px;
+    top: 50px;
+    visibility: hidden;
+    
+
+}
+
+.background-blur{
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.637);
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
+    visibility: hidden;
+    }
+
+.mark-scheme-frame{
+    max-height: 800px;
+    background-color: var(--main-background);
+    padding: 0px; 
+}
+
+.exit-button{
+    background-color: transparent;
+    color: var(--font-700);
+    font-size: 18px;
+    font-family: "Arial", sans-serif;
+    position: absolute;
+    right: 0px;
+    width: 30px;
+    height: 30px;
+    border: 1px var(--gray-900) solid;
+    margin: 0.5rem;
+    border-radius: 50%;
+    text-align: center;
+    padding: 0;
+}
+</style>

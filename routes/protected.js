@@ -12,7 +12,9 @@ router.use(express.json());
 
 
 
-// Middleware to check if the user is authenticated
+
+
+// Tools
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     
@@ -21,15 +23,108 @@ const isAuthenticated = (req, res, next) => {
   res.redirect('/login');
 };
 
-router.get('/user/profile', isAuthenticated, (req, res) => {
-
-  res.render('profile', { user: req.user }); 
+router.post('/getuser', isAuthenticated, (req, res) => {
+  res.json(req.user);
 });
 
+// Function to add or update monthly experience
+async function addOrUpdateMonthlyExperience(userId, month, experienceGained) {
+  const client = new Client(process.env.DATABASE_URL);
+  try {
+    await client.connect();
+
+    // Check if a record already exists for the given month and user
+    const checkQuery = `
+      SELECT experience_gained
+      FROM "MonthlyExperience"
+      WHERE user_id = $1 AND month = $2;
+    `;
+
+    const checkValues = [userId, month];
+
+    const checkResult = await client.query(checkQuery, checkValues);
+
+    if (checkResult.rows.length > 0) {
+      // Update the existing record with the new experience value
+      const existingExperience = checkResult.rows[0].experience_gained;
+      const newExperience = parseInt(existingExperience)+ parseInt(experienceGained);
+
+      const updateQuery = `
+        UPDATE "MonthlyExperience"
+        SET experience_gained = $1
+        WHERE user_id = $2 AND month = $3;
+      `;
+
+      const updateValues = [newExperience, userId, month];
+
+      await client.query(updateQuery, updateValues);
+      
+    } else {
+      // Insert a new record with the given experience value
+      const insertQuery = `
+        INSERT INTO "MonthlyExperience" (user_id, month, experience_gained)
+        VALUES ($1, $2, $3);
+      `;
+
+      const insertValues = [userId, month, experienceGained];
+
+      await client.query(insertQuery, insertValues);
+      
+    }
+  } catch (err) {
+    console.error("Error executing query:", err);
+  } finally {
+    await client.end();
+  }
+}
+
+router.get('/user/:userId/monthly-experiences',isAuthenticated, async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    const experiences = await getUserMonthlyExperiences(userId);
+    res.json(experiences);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "An error occurred." });
+  }
+});
+
+router.get('/user/:userId/questions-generated',isAuthenticated, async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    const experiences = await getQuestionsGenerated(userId);
+    res.json(experiences);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "An error occurred." });
+  }
+});
+
+router.post('/user/:userId/monthly-experiences',isAuthenticated, async (req, res) => {
+  const userId = req.user.userId;
+  const { month, experienceGained } = req.body;
+
+  try {
+    await addOrUpdateMonthlyExperience(userId, month, experienceGained);
+    res.json({ message: "Monthly experience added/updated successfully." });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "An error occurred." });
+  }
+});
+
+
+
+
+
+
+
+// New User Function
 router.get('/get-started', isAuthenticated, async (req, res) => {
   let user = req.user;
   personalised = await User.checkIfPersonalised(user.user_id)
-  console.log(personalised)
   if (personalised){
     res.redirect("/dashboard")
   }else{
@@ -39,6 +134,39 @@ router.get('/get-started', isAuthenticated, async (req, res) => {
   
 });
 
+
+
+
+
+
+// Logout Function
+router.get('/logout', isAuthenticated, (req, res) => {
+  req.logout(() => {
+    res.clearCookie('rememberMe');
+    
+    // Destroy the session
+    req.session.destroy(err => {
+      if (err) {
+        console.error('Error destroying session:', err);
+      }
+      res.redirect('/login');
+    });
+  });
+});
+
+
+
+
+// Render User Profile
+router.get('/user/profile', isAuthenticated, (req, res) => {
+  res.render('profile', { user: req.user }); 
+});
+
+
+
+
+
+// Payment System
 function createPrices() {
   return stripe.prices.list({ active: true, limit: 10 })
     .then(prices => {
@@ -86,8 +214,6 @@ router.post("/create-checkout-session", async (req, res) => {
       return res.json({ url: "/register" });
     }
     
-
-
     const subscriptions = await subscriptionsPromise;
     let id;
     let customer;
@@ -105,7 +231,6 @@ router.post("/create-checkout-session", async (req, res) => {
         email: user.email
         });
       }
-
       
     } catch (error) {
 
@@ -147,9 +272,6 @@ router.post("/create-checkout-session", async (req, res) => {
     res.status(500).json({ err: error.message });
   }
 });
-
-
-
 
 function determineCheckoutMode(items, subscriptions) {
   // Check if any item corresponds to a free subscription
@@ -226,135 +348,33 @@ router.get('/pricing/success', async (req, res) => {
 });
 
 
-router.get('/dashboard', isAuthenticated, async (req, res) => {
-  let user = req.user;
-  const customer = await stripe.customers.retrieve(user.user_id);
-  const subscriptions = await stripe.subscriptions.list({
-    customer: customer.id,
-  });
-  let plan = subscriptions.data[0].plan;
-
-  if (plan.active = true){
-    getExperienceGainedThisMonth(user.user_id)
-    .then(experienceGained => {
-      user["this-months-experience"] = experienceGained;
-      user["averagescore "] = user["averagescore "] * 100;
-      res.render('Dashboard', { user: user });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      user["averagescore "] = user["averagescore "] * 100;
-      user["this-months-experience"] = 0;
-      res.render('Dashboard', { user: user });
-    });
-  }else{
-    getExperienceGainedThisMonth(user.user_id)
-    .then(experienceGained => {
-      user["this-months-experience"] = experienceGained;
-      user["averagescore "] = user["averagescore "] * 100;
-      res.render('Dashboard', { user: user });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      user["averagescore "] = user["averagescore "] * 100;
-      user["this-months-experience"] = 0;
-      res.render('Dashboard', { user: user });
-    });
-  }
-
-  
-  
-});
 
 
 
 
+// Dashboard Functions
 
-
-router.get('/user/quizzes', isAuthenticated, (req, res) => {
-
-  res.render('Quizzes', { user: req.user }); 
-});
-
-router.get('/user/quizzes/create', isAuthenticated, (req, res) => {
-
-  res.render('Quizzes/Create', { user: req.user }); 
-});
-
-
-router.get('/user/quizzes/quiz', isAuthenticated, (req, res) => {
-
-  res.render('Quizzes/Quiz', { user: req.user }); 
-});
-
-
-router.get('/user/exams', isAuthenticated, (req, res) => {
-
-  res.render('Exams', { user: req.user }); 
-});
-
-router.get('/user/exams/create', isAuthenticated, (req, res) => {
-
-  res.render('Exams/Create', { user: req.user }); 
-});
-
-
-router.get('/user/exams/quiz', isAuthenticated, (req, res) => {
-
-  res.render('Exams/Quiz', { user: req.user }); 
-});
-
-router.post('/getuser', isAuthenticated, (req, res) => {
-
-  res.json(req.user);
-});
-
-
-
-router.get('/logout', isAuthenticated, (req, res) => {
-  req.logout(() => {
-    res.clearCookie('rememberMe');
-    
-    // Destroy the session
-    req.session.destroy(err => {
-      if (err) {
-        console.error('Error destroying session:', err);
-      }
-      res.redirect('/login');
-    });
-  });
-});
-
-
-router.get("/user/getTopics", isAuthenticated, async (req, res) => {
-  try {
-    const subject = req.query.subject;
-    const topics = await getTopicsForSubject(subject);
-    res.json(topics);
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'An error occurred' });
-  }
-});
-
-
-async function getTopicsForSubject(userId) {
+// Function to get user's monthly experiences
+async function getUserMonthlyExperiences(userId) {
   const client = new Client(process.env.DATABASE_URL);
   try {
     await client.connect();
 
-    const query = 'SELECT topic_list FROM subjects WHERE subject_name = $1';
-    const result = await client.query(query, [subjectName]);
+    const query = `
+      SELECT date_trunc('month', month) AS month_start, SUM(experience_gained) AS total_experience
+      FROM "MonthlyExperience"
+      WHERE user_id = $1
+      GROUP BY date_trunc('month', month)
+      ORDER BY date_trunc('month', month);
+    `;
 
-    if (result.rowCount === 0) {
-      console.log(`No topics found for subject: ${subjectName}`);
-      return [];
-    }
+    const values = [userId];
 
-    const topics = result.rows[0].topic_list;
-    return topics;
+    const result = await client.query(query, values);
+    
+    return result.rows;
   } catch (err) {
-    console.error('Error:', err);
+    console.error("Error querying database:", err);
     return [];
   } finally {
     await client.end();
@@ -392,8 +412,130 @@ async function getExperienceGainedThisMonth(userId) {
   }
 }
 
+router.get('/dashboard', isAuthenticated, async (req, res) => {
+  let user = req.user;
+  try{
+    const customer = await stripe.customers.retrieve(user.user_id);
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+    });
+    let plan = subscriptions.data[0].plan;
+  
+    if (plan.active = true){
+      getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+    }else{
+      getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+    }
+  }catch(e){
+    getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+  };
+  
+
+  
+  
+});
 
 
+
+
+
+
+
+// Quiz Functions
+
+
+
+// Users Quizzes Menu
+
+async function deleteQuiz(userId,quizId) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+  try {
+    await client.connect();
+    // Delete the quiz and check ownership
+    const deleteQuizQuery = 'DELETE FROM public.quizzes WHERE quiz_id = $1 AND user_id = $2';
+    const result = await client.query(deleteQuizQuery, [quizId, userId]);
+
+  } catch (err) {
+    console.error("Error executing query:", err);
+  } finally {
+    // Close the database connection
+    await client.end();
+  }
+}
+
+router.get('/user/quizzes', isAuthenticated, (req, res) => {
+  res.render('Quizzes', { user: req.user }); 
+});
+
+router.delete("/user/quizzes/delete-quiz/:quizId", isAuthenticated, async (req, res) => {
+  const quiz_id = req.params.quizId;
+  const userId = req.user.user_id;
+
+  deleteQuiz(userId, quiz_id)
+  .then(deletedQuiz => res.status(200).json({ message: 'Quiz deleted successfully', deletedQuiz }))
+  .catch(error => res.status(500).json({ error: 'An error occurred' }));
+})
+
+
+
+
+
+// Create a Quiz Menu
+
+// Function
+async function getAllSubjects() {
+  const client = new Client(process.env.DATABASE_URL);
+  try {
+    await client.connect();
+
+    const query = 'SELECT subject_name FROM subjects';
+    const result = await client.query(query);
+
+    const subjects = result.rows.map(row => row.subject_name);
+    return subjects;
+  } catch (err) {
+    console.error('Error:', err);
+    return [];
+  } finally {
+    await client.end();
+  }
+}
 
 async function getTopicsForSubject(subjectName) {
   const client = new Client(process.env.DATABASE_URL);
@@ -418,6 +560,158 @@ async function getTopicsForSubject(subjectName) {
   }
 }
 
+async function generateQuestion(question) {
+  let qType = "";
+  if (question.type === "Multiple Choice") {
+    qType = "generate_multiple_choice";
+  } else if (question.type === "Short") {
+    qType = "generate_short_answer";
+  } else if (question.type === "Long") {
+    qType = "generate_long_answer";
+  }
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/' + qType, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "subject": question.subject,
+        "topic": question.topic,
+        "difficulty": question.difficulty,
+        "level": question.level
+      })
+    });
+
+
+    if (response.ok) {
+      const responseData = await response.json();
+      const result = responseData.result; // Parse the result string to JSON
+     
+      return result;
+    } else {
+      // Handle error, throw an exception or return an appropriate value
+      console.error('Error:', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return null;
+  }
+}
+
+async function createQuiz(userId, quizName) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+  try {
+    await client.connect();
+
+    // Insert a new record with the given user_id 
+    const insertQuery = `
+      INSERT INTO "quizzes" (user_id, quiz_name)
+      VALUES ($1, $2)
+      RETURNING quiz_id;
+    `;
+
+    const insertValues = [userId, quizName];
+
+    const result = await client.query(insertQuery, insertValues);
+
+    // The generated paper_id is returned as part of the result
+    const quiz_id = result.rows[0].quiz_id;
+    return quiz_id;
+  } catch (err) {
+    console.error("Error executing query:", err);
+  } finally {
+    await client.end();
+  }
+}
+
+async function createQuestion(userId, questionData) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+  try {
+    await client.connect();
+
+    // Insert a new record with the given user_id and question data
+    const insertQuery = `
+      INSERT INTO public.questions (user_id, subject, question, topic, type, solution, answer, marks)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING question_id;
+    `;
+
+    const result = await client.query(insertQuery, [
+      userId,
+      questionData["SUBJECT"].toString(),
+      questionData["QUESTION"].toString(),
+      questionData["TOPIC"].toString(),
+      questionData["TYPE"].toString(),
+      questionData["SOLUTION"].toString(),
+      questionData["ANSWER"].toString(),
+      questionData["MARKS"].toString(),
+    ]);
+
+    try {
+      // Update the users table to increment the questions_generated count
+      const updateQuery = `
+        UPDATE public.users
+        SET questions_generated = questions_generated + 1
+        WHERE user_id = $1;
+      `;
+      const updateValues = [userId];
+      await client.query(updateQuery, updateValues);
+    } catch (err) {
+      console.error("Error updating user questions_generated count:", err);
+    }
+
+    const questionId = result.rows[0].question_id;
+    return questionId;
+
+  } catch (err) {
+    console.error("Error executing query:", err);
+  } finally {
+    await client.end();
+  }
+}
+
+async function createQuizQuestion(quizId, questionId) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+  try {
+    await client.connect();
+
+    const insertQuery = `
+      INSERT INTO "quizquestions" (quiz_id, question_id)
+      VALUES ($1, $2)
+    `;
+
+    const insertValues = [quizId, questionId];
+
+    await client.query(insertQuery, insertValues);
+
+  } catch (err) {
+    console.error("Error executing query:", err);
+  } finally {
+    await client.end();
+  }
+}
+
+
+
+
+
+// Endpoints
+router.get('/user/quizzes/create', isAuthenticated, (req, res) => {
+
+  res.render('Quizzes/Create', { user: req.user }); 
+});
 
 router.get("/user/getSubjects", isAuthenticated, async (req, res) => {
   try {
@@ -429,48 +723,145 @@ router.get("/user/getSubjects", isAuthenticated, async (req, res) => {
   }
 });
 
+router.post("/user/generateQuiz", isAuthenticated, async (req, res) => {
+  const questions = req.body.questions;
+  const quizName = req.body.quizName;
 
-async function getAllSubjects() {
-  const client = new Client(process.env.DATABASE_URL);
+  try {
+    const generatedQuestions = await Promise.all(
+      Object.values(questions).map(async (question) => {
+        const generatedQuestion = await generateQuestion(question);
+        return generatedQuestion;
+      })
+    );
+
+    // Create a new quiz and get the quiz ID
+  createQuiz(req.user.user_id,quizName)
+  .then(async quizID=>{
+
+    // Create and associate questions with the generated quiz
+    await Promise.all(
+      
+      Object.values(generatedQuestions).map(async (question) => {
+       
+        const questionId = await createQuestion(parseInt(req.user.user_id), question);
+        await createQuizQuestion(quizID, questionId)
+        
+      })
+    );
+    res.status(200).json({ "quizID": quizID });
+  })
+
+    
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+// Define a route to handle GET requests for retrieving topics
+router.get("/user/getTopics", isAuthenticated, async (req, res) => {
+  try {
+    // Extract the 'subject' query parameter from the request
+    const subject = req.query.subject;
+
+    // Call the 'getTopicsForSubject' function to retrieve topics for the specified subject
+    const topics = await getTopicsForSubject(subject);
+    res.json(topics);
+
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+
+
+
+
+
+// User's Quiz Menu
+
+// Functions
+
+async function getQuizzes(userId) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
   try {
     await client.connect();
 
-    const query = 'SELECT subject_name FROM subjects';
-    const result = await client.query(query);
+    const selectQuery = `
+    SELECT
+    q.quiz_id,
+    q.user_id AS quiz_owner_id,
+    q.quiz_name,
+    q.creation_date AS quiz_creation_date,
+    a.attempt_id,
+    a.user_id AS attempt_user_id,
+    a.attempt_date,
+    a.score,
+    COALESCE(
+        CASE
+            WHEN COUNT(DISTINCT ques.subject) > 1 THEN 'Mixed'
+            ELSE MAX(ques.subject)
+        END,
+        'No questions attached'
+    ) AS quiz_subject
+FROM
+    public.quizzes q
+LEFT JOIN
+    public.attempts a ON q.quiz_id = a.quiz_id
+LEFT JOIN (
+    SELECT qq.quiz_id, q.subject
+    FROM public.quizquestions qq
+    INNER JOIN public.questions q ON qq.question_id = q.question_id
+) ques ON q.quiz_id = ques.quiz_id
+WHERE
+    q.user_id = $1
+GROUP BY
+    q.quiz_id, q.user_id, q.quiz_name, q.creation_date, a.attempt_id, a.user_id, a.attempt_date, a.score;
 
-    const subjects = result.rows.map(row => row.subject_name);
-    return subjects;
+    `;
+
+    const { rows } = await client.query(selectQuery, [userId]);
+
+    return rows;
   } catch (err) {
-    console.error('Error:', err);
-    return [];
+    console.error("Error executing query:", err);
+    throw err;
   } finally {
     await client.end();
   }
 }
 
+getQuizzes(2)
+.then(function(res){
+  console.log(res)
+})
 
-// Function to get user's monthly experiences
-async function getUserMonthlyExperiences(userId) {
-  const client = new Client(process.env.DATABASE_URL);
+
+async function getQuizName(quizId) {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
   try {
     await client.connect();
 
-    const query = `
-      SELECT date_trunc('month', month) AS month_start, SUM(experience_gained) AS total_experience
-      FROM "MonthlyExperience"
-      WHERE user_id = $1
-      GROUP BY date_trunc('month', month)
-      ORDER BY date_trunc('month', month);
+    const selectQuery = `
+      SELECT quiz_name
+      FROM public.quizzes
+      WHERE quiz_id = $1
     `;
-
-    const values = [userId];
-
-    const result = await client.query(query, values);
     
-    return result.rows;
+    const { rows } = await client.query(selectQuery, [quizId]);
+    
+    return rows;
   } catch (err) {
-    console.error("Error querying database:", err);
-    return [];
+    console.error("Error executing query:", err);
+    throw err;
   } finally {
     await client.end();
   }
@@ -501,94 +892,73 @@ async function getQuestionsGenerated(userId) {
   }
 }
 
-// Function to add or update monthly experience
-async function addOrUpdateMonthlyExperience(userId, month, experienceGained) {
-  const client = new Client(process.env.DATABASE_URL);
+async function getQuizQuestions(quizId) {
+  
+  
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
   try {
     await client.connect();
 
-    // Check if a record already exists for the given month and user
-    const checkQuery = `
-      SELECT experience_gained
-      FROM "MonthlyExperience"
-      WHERE user_id = $1 AND month = $2;
+    const selectQuery = `
+    SELECT
+    q.question_id,
+    q.user_id,
+    TO_JSON(
+      json_build_object(
+        'SUBJECT', q.subject,
+        'QUESTION', q.question,
+        'TOPIC', q.topic,
+        'TYPE', q.type,
+        'SOLUTION', q.solution,
+        'ANSWER', q.answer,
+        'MARKS', q.marks
+      )
+    ) AS question_data
+  FROM
+    public.questions q
+  INNER JOIN
+    public.quizquestions qq ON q.question_id = qq.question_id
+  WHERE
+    qq.quiz_id = $1;
+  
     `;
 
-    const checkValues = [userId, month];
+    const { rows } = await client.query(selectQuery, [quizId]);
 
-    const checkResult = await client.query(checkQuery, checkValues);
-
-    if (checkResult.rows.length > 0) {
-      // Update the existing record with the new experience value
-      const existingExperience = checkResult.rows[0].experience_gained;
-      const newExperience = parseInt(existingExperience)+ parseInt(experienceGained);
-
-      const updateQuery = `
-        UPDATE "MonthlyExperience"
-        SET experience_gained = $1
-        WHERE user_id = $2 AND month = $3;
-      `;
-
-      const updateValues = [newExperience, userId, month];
-
-      await client.query(updateQuery, updateValues);
-      
-    } else {
-      // Insert a new record with the given experience value
-      const insertQuery = `
-        INSERT INTO "MonthlyExperience" (user_id, month, experience_gained)
-        VALUES ($1, $2, $3);
-      `;
-
-      const insertValues = [userId, month, experienceGained];
-
-      await client.query(insertQuery, insertValues);
-      
-    }
+    return rows;
   } catch (err) {
     console.error("Error executing query:", err);
+    throw err;
   } finally {
     await client.end();
   }
 }
 
+// getQuizQuestions("948448922145292289")
+// .then(function(res){
+//   console.log(res)
+// })
+// Endpoints
 
-router.get('/user/:userId/monthly-experiences',isAuthenticated, async (req, res) => {
-  const userId = req.user.user_id;
+router.get('/user/quizzes/quiz', isAuthenticated, (req, res) => {
 
-  try {
-    const experiences = await getUserMonthlyExperiences(userId);
-    res.json(experiences);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "An error occurred." });
-  }
+  res.render('Quizzes/Quiz', { user: req.user }); 
 });
 
-router.get('/user/:userId/questions-generated',isAuthenticated, async (req, res) => {
-  const userId = req.user.user_id;
+router.get("/user/quiz/get-quizzes", isAuthenticated, async (req,res) =>{
+  try{
+    let quizzes = await getQuizzes(req.user.user_id);
 
-  try {
-    const experiences = await getQuestionsGenerated(userId);
-    res.json(experiences);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "An error occurred." });
+    res.status(200).json({"quizzes": quizzes})
   }
-});
+  catch{
+    res.status(500)
 
-router.post('/user/:userId/monthly-experiences',isAuthenticated, async (req, res) => {
-  const userId = req.user.userId;
-  const { month, experienceGained } = req.body;
-
-  try {
-    await addOrUpdateMonthlyExperience(userId, month, experienceGained);
-    res.json({ message: "Monthly experience added/updated successfully." });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "An error occurred." });
   }
-});
+})
 
 router.get("/user/quizzes/get-questions", isAuthenticated, async (req, res) => {
   try {
@@ -603,54 +973,66 @@ router.get("/user/quizzes/get-questions", isAuthenticated, async (req, res) => {
   }
 });
 
-router.post("/user/generateQuiz", isAuthenticated, async (req, res) => {
-  const questions = req.body.questions;
-  const quizName = req.body.quizName;
 
-  try {
-    const generatedQuestions = await Promise.all(
-      Object.values(questions).map(async (question) => {
-        const generatedQuestion = await generateQuestion(question);
-        return generatedQuestion;
-      })
-    );
 
-    // Create a new quiz and get the quiz ID
-  createQuiz(req.user.user_id,quizName)
-  .then(async quizID=>{
 
-    // Create and associate questions with the generated quiz
-    await Promise.all(
-      
-      Object.values(generatedQuestions).map(async (question) => {
-       
-        const questionId = await createQuestion(req.user.user_id, question);
-        await createQuizQuestion(quizID,questionId)
-        
-      })
-    );
-    res.status(200).json({ "quizID": quizID });
-  })
 
-    
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'An error occurred' });
-  }
+// Marked User's Quiz Menu
+router.get('/user/quizzes/marked', isAuthenticated, (req, res) => {
+
+  res.render('Quizzes/Marked', { user: req.user }); 
 });
 
-router.delete("/user/quizzes/delete-quiz/:quizId", isAuthenticated, async (req, res) => {
-  const quiz_id = req.params.quizId;
-  const userId = req.user.user_id;
+router.post("/user/markQuiz", isAuthenticated, async (req, res) => {
+
+  const questions = req.body.questions;
   
 
-  deleteQuiz(userId, quiz_id)
-  .then(deletedQuiz => res.status(200).json({ message: 'Quiz deleted successfully', deletedQuiz }))
-  .catch(error => res.status(500).json({ error: 'An error occurred' }));
-  
-  
+  try {
+    // const response = await fetch('http://77.68.52.72:8000/markquiz', {
+    const response = await fetch('http://127.0.0.1:8000/markquiz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "questions": questions})
+    });
+
+
+    if (response.ok) {
+      const responseData = await response.json();
+      const result = responseData.result; // Parse the result string to JSON
+     
+      res.status(200).json({ "result": result });
+    } else {
+      // Handle error, throw an exception or return an appropriate value
+      console.error('Error:', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return null;
+  }
 
 })
+
+
+
+
+
+
+
+
+// Exam Functions
+router.get('/user/exams', isAuthenticated, (req, res) => {
+
+  res.render('Exams', { user: req.user }); 
+});
+
+router.get('/user/exams/create', isAuthenticated, (req, res) => {
+
+  res.render('Exams/Create', { user: req.user }); 
+});
 
 async function createPaper(userId) {
   const client = new Client({
@@ -660,7 +1042,7 @@ async function createPaper(userId) {
   try {
     await client.connect();
 
-    // Insert a new record with the given user_id and creation_date
+    // Insert a new record with the given user_id 
     const insertQuery = `
       INSERT INTO "exampapers" (user_id, creation_date)
       VALUES ($1, $2)
@@ -681,274 +1063,13 @@ async function createPaper(userId) {
   }
 }
 
+router.get('/user/exams/quiz', isAuthenticated, (req, res) => {
+
+  res.render('Exams/Quiz', { user: req.user }); 
+});
 
 
 
-async function generateQuestion(question) {
-  let qType = "";
-  if (question.type === "Multiple Choice") {
-    qType = "generate_multiple_choice";
-  } else if (question.type === "Short") {
-    qType = "generate_short_answer";
-  } else if (question.type === "Long") {
-    qType = "generate_long_answer";
-  }
-
-  try {
-    const response = await fetch('http://77.68.52.72:8000/' + qType, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        "amountOfQuestions": 1,
-        "subject": question.subject,
-        "topics": question.topic,
-        "difficulty": question.difficulty,
-        "level": question.level
-      })
-    });
-
-
-    if (response.ok) {
-      const responseData = await response.json();
-      const result = responseData.result; // Parse the result string to JSON
-
-      return result;
-    } else {
-      // Handle error, throw an exception or return an appropriate value
-      console.error('Error:', response.statusText);
-      return null;
-    }
-  } catch (error) {
-    console.error('Fetch error:', error);
-    return null;
-  }
-}
-
-
-async function createQuiz(userId,quizName) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-
-    // Insert a new record with the given user_id and creation_date
-    const insertQuery = `
-      INSERT INTO "quizzes" (user_id, quiz_name)
-      VALUES ($1, $2)
-      RETURNING quiz_id;
-    `;
-
-    const insertValues = [userId, quizName];
-
-    const result = await client.query(insertQuery, insertValues);
-
-    // The generated paper_id is returned as part of the result
-    const quiz_id = result.rows[0].quiz_id;
-    return quiz_id;
-  } catch (err) {
-    console.error("Error executing query:", err);
-  } finally {
-    await client.end();
-  }
-}
-
-async function createQuestion(userId,questionData) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-
-    // Insert a new record with the given user_id and creation_date
-    const insertQuery = `
-      INSERT INTO "questions" (user_id, question)
-      VALUES ($1, $2)
-      RETURNING question_id;
-    `;
-
-    const insertValues = [userId, questionData];
-
-    const result = await client.query(insertQuery, insertValues);
-
-    try {  
-      // Insert a new record with the given user_id and creation_date
-      const insertQuery = `
-      UPDATE users
-      SET questions_generated = questions_generated + 1
-      WHERE user_id = ($1);
-      
-      `;
-      const insertValues = [userId];
-      await client.query(insertQuery, insertValues);
-  
-    } catch (err) {
-      console.error("Error executing query:", err);
-    } finally {
-      await client.end();
-    }t
-    const question_id = result.rows[0].question_id;
-    return question_id;
-  } catch (err) {
-    console.error("Error executing query:", err);
-  } finally {
-    await client.end();
-  }
-}
-
-async function createQuizQuestion(quizId,questionId) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-
-    const insertQuery = `
-      INSERT INTO "quizquestions" (quiz_id, question_id)
-      VALUES ($1, $2)
-    `;
-
-    const insertValues = [quizId, questionId];
-
-    await client.query(insertQuery, insertValues);
-
-  } catch (err) {
-    console.error("Error executing query:", err);
-  } finally {
-    await client.end();
-  }
-}
-
-async function getQuizQuestions(quizId) {
-  
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-
-    const selectQuery = `
-      SELECT q.question_id, q.question, q.attempts
-      FROM public.questions q
-      INNER JOIN public.quizquestions qq ON q.question_id = qq.question_id
-      WHERE qq.quiz_id = $1
-    `;
-    
-    const { rows } = await client.query(selectQuery, [quizId]);
-    
-    return rows;
-  } catch (err) {
-    console.error("Error executing query:", err);
-    throw err;
-  } finally {
-    await client.end();
-  }
-}
-
-async function getQuizName(quizId) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-
-    const selectQuery = `
-      SELECT quiz_name
-      FROM public.quizzes
-      WHERE quiz_id = $1
-    `;
-    
-    const { rows } = await client.query(selectQuery, [quizId]);
-    
-    return rows;
-  } catch (err) {
-    console.error("Error executing query:", err);
-    throw err;
-  } finally {
-    await client.end();
-  }
-}
-
-
-router.get("/user/quiz/get-quizzes", isAuthenticated, async (req,res) =>{
-  try{
-    let quizzes = await getQuizzes(req.user.user_id);
-
-    res.status(200).json({"quizzes": quizzes})
-  }
-  catch{
-    res.status(500)
-
-  }
-})
-
-
-async function getQuizzes(userId) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-
-    const selectQuery = `
-      SELECT DISTINCT ON (q.quiz_id)
-        q.quiz_id,
-        q.user_id AS quiz_owner_id,
-        q.quiz_name,
-        q.creation_date AS quiz_creation_date,
-        a.attempt_id,
-        a.user_id AS attempt_user_id,
-        a.attempt_date,
-        a.score
-      FROM
-        public.quizzes q
-      LEFT JOIN
-        public.attempts a ON q.quiz_id = a.quiz_id
-      WHERE
-        q.user_id = $1
-      ORDER BY
-        q.quiz_id, a.attempt_date DESC;
-    `;
-
-    const { rows } = await client.query(selectQuery, [userId]);
-
-    return rows;
-  } catch (err) {
-    console.error("Error executing query:", err);
-    throw err;
-  } finally {
-    await client.end();
-  }
-}
-
-async function deleteQuiz(userId,quizId) {
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-    console.log(quizId)
-    // Delete the quiz and check ownership
-    const deleteQuizQuery = 'DELETE FROM public.quizzes WHERE quiz_id = $1 AND user_id = $2';
-    const result = await client.query(deleteQuizQuery, [quizId, userId]);
-    console.log('Rows affected:', result.rowCount);
-
-  } catch (err) {
-    console.error("Error executing query:", err);
-  } finally {
-    // Close the database connection
-    await client.end();
-  }
-}
 
 
 module.exports = router;

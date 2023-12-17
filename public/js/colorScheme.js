@@ -15,6 +15,11 @@ function lightMode() {
     root.style.setProperty('--primary-700', '#6941C6');
     root.style.setProperty('--primary-800', '#53389E');
 
+    root.style.setProperty('--error-50', '#FEF3F2');
+    root.style.setProperty('--error-background', '#FEF3F2');
+    root.style.setProperty('--error-400', '#F97066');
+    root.style.setProperty('--error-500', '#F04438');
+
     root.style.setProperty('--font-logo', '#475467');
     root.style.setProperty('--font-700', '#344054');
     root.style.setProperty('--font-buttons', '#000000');
@@ -62,6 +67,11 @@ function darkMode() {
     root.style.setProperty('--primary-600', '#7F56D9');
     root.style.setProperty('--primary-700', '#6941C6');
     root.style.setProperty('--primary-800', '#53389E');
+
+    root.style.setProperty('--error-50', '#FEF3F2');
+    root.style.setProperty('--error-background', '#642721');
+    root.style.setProperty('--error-400', '#F97066');
+    root.style.setProperty('--error-500', '#ce463a');
 
     root.style.setProperty('--font-logo', '#dbd7d7');
     root.style.setProperty('--font-700', '#d4d1d1');

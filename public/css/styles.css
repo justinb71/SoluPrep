@@ -90,6 +90,15 @@
     --primary-700: #6941C6;
     --primary-800: #53389E;
 
+    --warning-50: #FFFAEB;
+    --warning-400: #FDB022;
+    --warning-500: #F79009;
+
+    --error-50: #FEF3F2;
+    --error-background: #642721;
+    --error-400: #F97066;
+    --error-500: #ce463a;
+
     --font-logo: #dbd7d7;
     --font-700: #d4d1d1;
     --font-side-panel-buttons: #d4d1d1;
@@ -321,7 +330,16 @@ button:active{
 .seperate{
     border-bottom: 1px solid var(--border);
     padding-bottom: 3rem;
+    transition: 0.3s;
+    all: unset;
 }
+
+.seperate-landing{
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 3rem;
+    transition: 0.3s;
+}
+
 
 .navbar {
     display: flex;
@@ -391,7 +409,7 @@ button:active{
 
 
 .nav_featured_card{
-    visibility: hidden;    
+    visibility: visible;    
     display: flex;
     padding: 20px 16px;
     flex-direction: column;
@@ -403,7 +421,9 @@ button:active{
     height: fit-content;
     margin-top: 2rem;
     margin-bottom: 2rem;
+    transition: .3s;
 }
+
 .nav_featured_card h1{
     color: var(--primary-700);
     flex: 1 0 0;
@@ -429,6 +449,24 @@ button:active{
     line-height: 20px; 
 }
 
+.nav_featured_card a{
+    font-size: 14px;
+}
+.failedPayment{
+    background: var(--error-background);
+
+}
+.failedPayment h1{
+    color: var(--error-500);
+}
+
+.failedPayment p{
+    color: var(--error-400);
+}
+
+.failedPayment a{
+    color: var(--error-500);
+}
 .settings_button {
     margin-bottom: 10px;
     display: flex;
@@ -927,7 +965,7 @@ footer h2{
 }
 
 table {
-    width: 100%;
+    width: 100;
     border-collapse: collapse;    
 }
 
@@ -1215,7 +1253,7 @@ td{
     align-items: center;
     border-radius: 8px;
     border: 1px solid var(--gray-300);
-    background: var(--white);
+    background: var(--gray-25);
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }
 
@@ -1242,7 +1280,7 @@ td{
     grid-auto-flow: columns;
     height: 30px;
     padding: 0 !important;
-    border-bottom: none;
+    
     border-bottom: 1px solid var(--gray-200);
 }
 
@@ -1358,6 +1396,15 @@ td{
     margin-left: 2rem;
 }
 
+.quiz-quiz-marked-data{
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    width: 50%;
+    text-align: center;
+     
+}
+
 .quiz-quiz-questions-frame{
     border-bottom: 1px solid var(--gray-200);
     width: 100%;
@@ -1464,7 +1511,7 @@ td{
 }
   
 .quiz-quiz-question-radio-label {
-    color: #101828;
+    color: var(--font-700);
 
     font-family: Inter;
     font-size: 18px;
@@ -1486,6 +1533,16 @@ td{
     
 }
 
+.quiz-mark-text{
+    text-align: end;
+    padding-right: 50px;
+    margin-top: -26px !important;    
+}
+
+.quiz-submit-button{
+    background-color: var(--gray-200);
+}
+
 .quiz_functions_frame{
     display: flex;
     justify-content: center;
@@ -1497,6 +1554,7 @@ td{
     background: #49da9e5e;
     height: 40px;
     padding: 5px 15px;
+    filter: brightness(1) !important;
 
 }
 .edit_button {
@@ -1606,7 +1664,71 @@ td{
     .footer_contiainer{
         width: calc(100% - 100px);
     }
+
+    .progress-frame{
+        width: 100vw !important;
+    }
+
+    .dashboard-main{
+        display: none;
+    }
+
+    .authenticated_navbar{
+        display: none;
+    }
+
+    .mobile-main{
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mobile-dahsboard-info-item{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 230px;
+        height: 53px;
+        flex-shrink: 0;
+        border-radius: 7px;
+        opacity: 0.7;
+        background: rgba(158, 119, 237, 0.40);
+    }
+
+    .mobile-dahsboard-info-item h1{
+        display: flex;
+        margin-top: 0px;
+        width: 229px;
+        height: 17px;
+        flex-direction: column;
+        justify-content: center;
+        color: #3D424B;
+        text-align: center;
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .mobile-dahsboard-info-item h2{
+        display: flex;
+        margin: 0px;
+    width: 66px;
+    height: 10.341px;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 20px;
+
+    font-weight: 600;
+    
+    }
 }
+
 
 @media (max-width: 1080px) {
     .grid {

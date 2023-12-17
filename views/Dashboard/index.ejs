@@ -18,7 +18,11 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MB65CC4F"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
-   <div class="main">
+
+
+
+
+   <div class="main dashboard-main">
     <h2 style="border-bottom: solid 1px var(--border); margin-bottom: 0px; padding-bottom: 2px; margin-top: 2px;">Hey, <%= user.first_name %></h2>
 
     <div class="dashboard_usage_grid">
@@ -54,6 +58,31 @@
     </div>
 
     <div style="width: 100%; border-top: solid 1px  var(--border);"></div>
+
+   </div>
+
+   <!-- Hidden For Now -->
+   <div class="mobile-main" style="visibility: hidden;">
+
+    <div class="frame" style="width: 370px; height: 385px; flex-shrink: 0; border-radius: 7px; background: #EAECF0; position: relative; top:77px; justify-content: start;">
+      <div style="width: 100%;">
+        <h1 style="font-size: 22px; text-align: start; margin-left: 22px; margin-bottom: 0px; height: 40px; display: flex; justify-content: center; flex-direction: column;">Welcome Back, <%= user.first_name %></h4>
+        <p style="margin-left: 22px; margin-top: 0px; width: 188px; font-size: 12px; color: #667085; font-weight: 500; height: 23px; display: flex; justify-content: center; flex-direction: column;
+        ">You Have Gained <%= user["this-months-experience"] %> Experience Points This Month</p>
+      </div>
+
+      <div>
+        <div class="mobile-dahsboard-info-item">
+          <h1>Average Score</h1>
+          <div style="display: flex; align-items: center; justify-content: center;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <path d="M8.89413 15.0475L7.58329 24.9167L13 21.6667L18.4166 24.9167L17.1058 15.0367M20.5833 8.66666C20.5833 12.8548 17.1881 16.25 13 16.25C8.8118 16.25 5.41663 12.8548 5.41663 8.66666C5.41663 4.4785 8.8118 1.08333 13 1.08333C17.1881 1.08333 20.5833 4.4785 20.5833 8.66666Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h2><%= user.averagescore %>%</h2>
+        </div>
+        </div>
+      </div>
+    </div>
 
    </div>
 </body>

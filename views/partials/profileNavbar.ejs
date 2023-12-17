@@ -85,21 +85,37 @@
     
 
     <div class="authenticated_navbar_bottom_contents">
-        <div class="nav_featured_card">
+        <!-- <div class="nav_featured_card">
             <div class="flex" style="width:100%;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7F56D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </div>
             <h1>
-                Question Usage
+                Quiz Usage
             </h1>
     
-            <p>You have used 90% of your available questions. Need more?</p>
+            <p>You have used 90% of your available questions. <a style="font-size: 14px; color: var(--primary-700);" href="/pricing">Need more?</a></p>
             <svg xmlns="http://www.w3.org/2000/svg" width="247" height="8" viewBox="0 0 247 8" fill="none">
                 <rect width="247" height="8" rx="4" fill="#F4EBFF"/>
                 <rect width="calc(247 * 0.9)" height="8" rx="4" fill="#7F56D9"/>
-              </svg>
+            </svg>
     
-        </div>   
+        </div>    -->
+<!-- 
+        <div class="nav_featured_card failedPayment">
+            <div class="flex" style="width:100%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 511.999 463.377" fill="#F79009" stroke="#7F56D9" fill-rule="evenodd" clip-rule="evenodd" ><path d="M289.639 9.137c12.411 7.25 23.763 18.883 33.037 34.913l.97 1.813 1.118 1.941 174.174 302.48c33.712 56.407-1.203 113.774-66.174 112.973v.12H73.485c-.895 0-1.78-.04-2.657-.112-59.104-.799-86.277-54.995-61.909-106.852.842-1.805 1.816-3.475 2.816-5.201L189.482 43.959l-.053-.032c9.22-15.786 20.717-27.457 33.411-34.805C243.788-3 268.711-3.086 289.639 9.137zM255.7 339.203c13.04 0 23.612 10.571 23.612 23.612 0 13.041-10.572 23.613-23.612 23.613-13.041 0-23.613-10.572-23.613-23.613s10.572-23.612 23.613-23.612zm17.639-35.379c-.794 19.906-34.506 19.931-35.278-.006-3.41-34.108-12.129-111.541-11.853-143.591.284-9.874 8.469-15.724 18.939-17.955 3.231-.686 6.781-1.024 10.357-1.019 3.595.008 7.153.362 10.387 1.051 10.818 2.303 19.309 8.392 19.309 18.446l-.043 1.005-11.818 142.069zM37.596 369.821L216.864 59.942c21.738-37.211 56.225-38.289 78.376 0l176.298 306.166c17.177 28.285 10.04 66.236-38.774 65.488H73.485c-33.017.756-52.841-25.695-35.889-61.775z"/></svg>
+            </div>
+            <h1>Message</h1>
+            <p>Description<a href="/pricing"></a></p>
+        </div>    -->
+
+        <!-- <div class="nav_featured_card failedPayment">
+            <div class="flex" style="width:100%;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 511.999 463.377" fill="var(--error-500)" stroke="#7F56D9" fill-rule="evenodd" clip-rule="evenodd" ><path d="M289.639 9.137c12.411 7.25 23.763 18.883 33.037 34.913l.97 1.813 1.118 1.941 174.174 302.48c33.712 56.407-1.203 113.774-66.174 112.973v.12H73.485c-.895 0-1.78-.04-2.657-.112-59.104-.799-86.277-54.995-61.909-106.852.842-1.805 1.816-3.475 2.816-5.201L189.482 43.959l-.053-.032c9.22-15.786 20.717-27.457 33.411-34.805C243.788-3 268.711-3.086 289.639 9.137zM255.7 339.203c13.04 0 23.612 10.571 23.612 23.612 0 13.041-10.572 23.613-23.612 23.613-13.041 0-23.613-10.572-23.613-23.613s10.572-23.612 23.613-23.612zm17.639-35.379c-.794 19.906-34.506 19.931-35.278-.006-3.41-34.108-12.129-111.541-11.853-143.591.284-9.874 8.469-15.724 18.939-17.955 3.231-.686 6.781-1.024 10.357-1.019 3.595.008 7.153.362 10.387 1.051 10.818 2.303 19.309 8.392 19.309 18.446l-.043 1.005-11.818 142.069zM37.596 369.821L216.864 59.942c21.738-37.211 56.225-38.289 78.376 0l176.298 306.166c17.177 28.285 10.04 66.236-38.774 65.488H73.485c-33.017.756-52.841-25.695-35.889-61.775z"/></svg>
+            </div>
+            <h1>Payment Unsuccessful</h1>
+            <p>Payment for your subscription was unsuccessful! <a href="/pricing">Please update your payment information</a></p>
+        </div>    -->
        
 
         <div class="nav_profile">
@@ -114,8 +130,8 @@
 
             </div>
             
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" onclick="window.location.href = '/logout'">
-                <path d="M7.5 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H7.5M13.3333 14.1667L17.5 10M17.5 10L13.3333 5.83333M17.5 10H7.5" stroke="#667085" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg xmlns="http://www.w3.org/2000/svg" style="all: unset !important; cursor: pointer;" width="20" height="20" viewBox="0 0 20 20" fill="none" onclick="window.location.href = '/logout'">
+                <path d="M7.5 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V4.16667C2.5 3.72464 2.67559 3.30072 2.98816 2.98816C3.30072 2.67559 3.72464 2.5 4.16667 2.5H7.5M13.3333 14.1667L17.5 10M17.5 10L13.3333 5.83333M17.5 10H7.5" stroke="#667085" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
               </svg>
 
         </div>
