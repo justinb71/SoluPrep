@@ -502,7 +502,7 @@ async function generateQuestion(question) {
       body: JSON.stringify({
         "amountOfQuestions": 1,
         "subject": question.subject,
-        "topics": question.topic,
+        "topic": question.topic,
         "difficulty": question.difficulty,
         "level": question.level
       })
