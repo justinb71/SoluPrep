@@ -46,7 +46,7 @@
             <h2>Questions</h2>
 
             <div class="quiz-create-questions-table">
-                <div class="even quiz-create-questions-table-headings">
+              <div class="even quiz-create-questions-table-headings", style="padding-top: 10px !important;">
                     <div class="quiz-create-questions-heading">No.</div>
                     <div class="quiz-create-questions-heading">Subject</div>
                     <div class="quiz-create-questions-heading">Topic</div>
@@ -414,7 +414,8 @@ function generateQuiz(event){
   display: flex;
   align-items: center;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: var(--gray-25);
+
   color: #000000;
   width: var(--container_width);
   overflow: hidden;
@@ -424,7 +425,7 @@ function generateQuiz(event){
 .radio-input label {
     all: unset;
     text-align: center;
-    color: var(--gray-500, #667085);
+    color: var(--gray-500);
     font-family: Inter;
     font-size: 16px;
     font-weight: 500;
@@ -513,7 +514,8 @@ function generateQuiz(event){
 
 .modal-content {
     width: 500px;
-    background-color: white;
+    background-color: var(--gray-25);
+    border: var(--border) 1px solid;
     margin: auto;
     padding: 20px;
     border-radius: 5px;
