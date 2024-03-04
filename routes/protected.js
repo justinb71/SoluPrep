@@ -348,8 +348,61 @@ router.get('/pricing/success', async (req, res) => {
 });
 
 
+router.get('/dashboard', isAuthenticated, async (req, res) => {
+  let user = req.user;
+  try{
+    const customer = await stripe.customers.retrieve(user.user_id);
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+    });
+    let plan = subscriptions.data[0].plan;
+  
+    if (plan.active = true){
+      getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+    }else{
+      getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+    }
+  }catch(e){
+    getExperienceGainedThisMonth(user.user_id)
+      .then(experienceGained => {
+        user["this-months-experience"] = experienceGained;
+        user["averagescore "] = user["averagescore "] * 100;
+        res.render('Dashboard', { user: user });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        user["averagescore "] = user["averagescore "] * 100;
+        user["this-months-experience"] = 0;
+        res.render('Dashboard', { user: user });
+      });
+  };
+  
 
-
+  
+  
+});
 
 
 // Dashboard Functions
@@ -571,7 +624,7 @@ async function generateQuestion(question) {
   }
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/' + qType, {
+    const response = await fetch('http://77.68.52.72:8000/' + qType, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -836,10 +889,6 @@ GROUP BY
   }
 }
 
-getQuizzes(2)
-.then(function(res){
-  console.log(res)
-})
 
 
 async function getQuizName(quizId) {
@@ -937,11 +986,6 @@ async function getQuizQuestions(quizId) {
   }
 }
 
-// getQuizQuestions("948448922145292289")
-// .then(function(res){
-//   console.log(res)
-// })
-// Endpoints
 
 router.get('/user/quizzes/quiz', isAuthenticated, (req, res) => {
 
@@ -989,8 +1033,7 @@ router.post("/user/markQuiz", isAuthenticated, async (req, res) => {
   
 
   try {
-    // const response = await fetch('http://77.68.52.72:8000/markquiz', {
-    const response = await fetch('http://127.0.0.1:8000/markquiz', {
+    const response = await fetch('http://77.68.52.72:8000/markquiz', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
