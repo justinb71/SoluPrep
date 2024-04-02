@@ -30,6 +30,11 @@ router.post('/register', async (req, res) => {
       return res.redirect('/Register');
     }
 
+    if (password.length <=3){
+      req.flash('error', 'Password must be greater than 3');
+      return res.redirect('/Register');
+    }
+
     // Check if a user with the same email already exists
     const existingUser = await User.findByEmail(email);
     if (existingUser) {

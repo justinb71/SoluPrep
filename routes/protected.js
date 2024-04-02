@@ -624,6 +624,7 @@ async function generateQuestion(question) {
   }
 
   try {
+    // const response = await fetch('http://127.0.0.1:8000/' + qType, {
     const response = await fetch('http://77.68.52.72:8000/' + qType, {
       method: 'POST',
       headers: {
@@ -693,23 +694,43 @@ async function createQuestion(userId, questionData) {
 
     // Insert a new record with the given user_id and question data
     const insertQuery = `
-      INSERT INTO public.questions (user_id, subject, question, topic, type, solution, answer, marks)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING question_id;
+    INSERT INTO public.questions (user_id, subject, question, topic, type, solution, answer, marks)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING question_id;
+    
     `;
+    let result 
     questionData = JSON.parse(questionData)
-    console.log(questionData)
 
-    const result = await client.query(insertQuery, [
-      userId,
-      questionData["SUBJECT"].toString(),
-      questionData["QUESTION"].toString(),
-      questionData["TOPIC"].toString(),
-      questionData["TYPE"].toString(),
-      questionData["SOLUTION"].toString(),
-      questionData["ANSWER"].toString(),
-      questionData["MARKS"].toString(),
-    ]);
+    if (questionData["TYPE"] == "Multiple Choice"){
+    
+      result = await client.query(insertQuery, [
+        userId,
+        questionData["SUBJECT"].toString(),
+        questionData["QUESTION"].toString() + '|SPLIT|' + questionData["OPTIONS"].join("|ARRAY-SPLIT|") ,
+        questionData["TOPIC"].toString(),
+        questionData["TYPE"].toString(),
+        questionData["SOLUTION"].toString(),
+        questionData["ANSWER"].toString(),
+        1,
+        
+      ]);
+
+    }else{
+      result = await client.query(insertQuery, [
+        userId,
+        questionData["SUBJECT"].toString(),
+        questionData["QUESTION"].toString(),
+        questionData["TOPIC"].toString(),
+        questionData["TYPE"].toString(),
+        questionData["SOLUTION"].toString(),
+        questionData["ANSWER"].toString(),
+        questionData["MARKS"].toString(),
+        
+      ]);
+    }
+
+    
 
     try {
       // Update the users table to increment the questions_generated count
@@ -725,6 +746,11 @@ async function createQuestion(userId, questionData) {
     }
 
     const questionId = result.rows[0].question_id;
+    console.log("\n\n")
+    console.log(questionId)
+    console.log(questionData["QUESTION"].toString())
+    console.log(result.rows[0].question_id)
+    console.log("\n\n")
     return questionId;
 
   } catch (err) {
@@ -735,6 +761,10 @@ async function createQuestion(userId, questionData) {
 }
 
 async function createQuizQuestion(quizId, questionId) {
+  console.log("\n\n")
+  console.log(quizId)
+  console.log(questionId)
+  console.log("\n\n")
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
   });
@@ -795,11 +825,13 @@ router.post("/user/generateQuiz", isAuthenticated, async (req, res) => {
   .then(async quizID=>{
 
     // Create and associate questions with the generated quiz
+    console.log(Object.values(generatedQuestions))
     await Promise.all(
+      
       
       Object.values(generatedQuestions).map(async (question) => {
        
-        const questionId = await createQuestion(parseInt(req.user.user_id), question);
+        let questionId = await createQuestion(parseInt(req.user.user_id), question);
         await createQuizQuestion(quizID, questionId)
         
       })
@@ -1035,7 +1067,7 @@ router.post("/user/markQuiz", isAuthenticated, async (req, res) => {
   
 
   try {
-    const response = await fetch('http://77.68.52.72:8000/markquiz', {
+    const response = await fetch('http://127.0.0.1:8000/markquiz', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

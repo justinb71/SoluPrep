@@ -1422,6 +1422,12 @@ td{
     font-weight: 500;
     line-height: normal;
 }
+.quiz-mark-text{
+    text-align: right;
+    padding-right: 30px;
+    position: relative;
+    top: -20px;
+}
 
 .quiz-quiz-question-radio-container {
     margin: 0 auto;
@@ -1477,7 +1483,7 @@ td{
 }
   
 .quiz-quiz-question-radio-label {
-    color: #101828;
+    color: var(--font-700);
 
     font-family: Inter;
     font-size: 18px;

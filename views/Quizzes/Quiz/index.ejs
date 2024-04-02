@@ -78,6 +78,7 @@ class CreateQuestion {
 
     // Method to create multiple-choice questions
     createMultipleChoiceQuestion(questionText, options, questionId) {
+        console.log(options)
         
         // Adding question data to the array
         this.questionData.push([questionId, 'Multiple Choice']);
@@ -328,8 +329,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                     // Create question based on its type
                     if (question["TYPE"] == "Multiple Choice") {
-                        text = questionNumber + ". " + question["QUESTION"];
-                        options = question["OPTIONS"];
+                        
+                        questionOptions_question = question["QUESTION"].split("|SPLIT|");
+                        text = questionNumber + ". " + questionOptions_question[0];
+                        options = questionOptions_question[1].split("|ARRAY-SPLIT|");
 
                         instance.createMultipleChoiceQuestion(text, options, questions[key]["question_id"]);
                     } else if (question["TYPE"] == "Short Answer") {
